@@ -1,6 +1,6 @@
-# Octopress::Deploy
+# Octopress Deploy
 
-This gem will contain the default deployment commands for Octopress.
+Deployment tools for Octopress and Jekyll blogs.
 
 ## Installation
 
