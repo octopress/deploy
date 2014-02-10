@@ -32,7 +32,7 @@ module Octopress
     end
 
     def self.init_options(options={})
-      @options ||= options
+      @options ||= options.to_symbol_keys
       @options[:config_file] ||= '_deploy.yml'
       @options[:site_dir] ||= site_dir
     end
