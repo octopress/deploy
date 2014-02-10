@@ -11,7 +11,7 @@ module Octopress
 
           c.action do |_, options|
             if options["init"] and options["init"].is_a?(String)
-              Octopress::Deploy.init_config(options["init"])
+              Octopress::Deploy.init_config(options["init"], options)
             else
               Octopress::Deploy.push(options)
             end
