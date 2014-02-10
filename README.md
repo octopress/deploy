@@ -49,7 +49,7 @@ Configurations should be added to a `_deploy.yml` file in your project's root di
 
 ### Git options
 
-Only git_url is required. Other options will default as shown below.
+Only `git_url` is required. Other options will default as shown below.
 
 | option        | Description                                      | Default
 |:--------------|:-------------------------------------------------|:---------------|
