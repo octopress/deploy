@@ -5,5 +5,5 @@ FileUtils.cd 'deploy_target' do
   system 'git init --bare'
 end
 
-Octopress::Deploy::Git.new({url: File.expand_path('deploy_target')}).push
+Octopress::Deploy::Git.new({git_url: File.expand_path('deploy_target')}).push
 FileUtils.rm_r 'deploy_target'

@@ -12,6 +12,8 @@ module Octopress
           @branch      = options[:git_branch] || config['git']['branch']
           @deploy_dir  = options[:deploy_dir] || config['git']['deploy_dir'] || '.deploy'
           @remote      = options[:remote]     || config['git']['remote'] || 'deploy'
+
+          abort "Deploy Failed: You must provide a repository URL before deploying. Check your #{@config_file}.".red if @repo.nil?
         end
       end
 

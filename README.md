@@ -20,7 +20,9 @@ Or install it yourself as:
 
 This is a generic git deployment system, it should work for GitHub, Heroku and other similar hosts.
 
-#### 1. Add a `_deploy.yml` configuration file to your project root.
+#### 1. Add a configuration file
+
+Create a file named `_deploy.yml` in your project root.
 
 For GitHub user pages, the url should be something like: `git@github.com:username.github.io` and the branch should be master.
 For project pages, the url should be the path to the project repo and the branch should be `gh-pages`.
@@ -28,15 +30,17 @@ For project pages, the url should be the path to the project repo and the branch
 ```yml
 site: _site
 git:
-  url: [git url]
+  url:
   branch: master
 ```
 
-#### 2. From Ruby run:
+#### 2. From Ruby run
 
 ```ruby
 Octopress::Deploy::Git.new().push
 ```
+
+If you do not have a config file set up yet, this will offer to create a default one for you.
 
 ### Options
 
@@ -50,7 +54,6 @@ It is recommended that you configure using the `deploy.yml`, but you can also pa
 | `git_branch`  | Deployment branch for git repository.            | master         |
 | `deploy_dir`  | Directory where deployment files are staged.     | .deploy        |
 | `remote`      | Name of git remote.                              | deploy         |
-
 
 ## Contributing
 
