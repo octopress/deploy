@@ -1,7 +1,7 @@
 module Octopress
   module Deploy
     class Cli < Octopress::Command
-      def init_with_program(p)
+      def self.init_with_program(p)
         p.command(:deploy) do |c|
           c.syntax "octopress deploy [options]"
           c.description "Deploy your Octopress site."
@@ -10,7 +10,11 @@ module Octopress
           c.option "init", "--init METHOD", "Initialize a config file with the options for the given method."
 
           c.action do |_, options|
-            Octopress::Deploy.push(options)
+            if options["init"] and options["init"].is_a?(String)
+              Octopress::Deploy.init_config(options["init"])
+            else
+              Octopress::Deploy.push(options)
+            end
           end
         end
       end
