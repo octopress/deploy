@@ -1,37 +1,15 @@
 module Octopress
   module Deploy
     class Git
+
       def initialize(options={})
-        @config_file = options[:config_file] || '_deploy.yml'
-        if !File.exists? @config_file
-          init_config if ask_bool("Deployment config file not found. Create #{@config_file}?")         
-        else
-          config = YAML.load(File.open(@config_file))
-          @site_dir    = options[:site_dir]   || config['site']
-          @repo        = options[:git_url]    || config['git']['url']
-          @branch      = options[:git_branch] || config['git']['branch']
-          @deploy_dir  = options[:deploy_dir] || config['git']['deploy_dir'] || '.deploy'
-          @remote      = options[:remote]     || config['git']['remote'] || 'deploy'
-
-          abort "Deploy Failed: You must provide a repository URL before deploying. Check your #{@config_file}.".red if @repo.nil?
-        end
-      end
-
-      # Create a config file
-      #
-      def init_config
-        config = <<-FILE
-site: _site
-git:
-  url:
-  branch: master
-FILE
-        File.open(@config_file, 'w') { |f| f.write(config) }
-        puts "File #{@config_file} created.".green
-        puts "------------------"
-        puts config
-        puts "------------------"
-        puts "Please update it with your settings."
+        @options    = options
+        @repo       = @options[:git_url]
+        @branch     = @options[:git_branch]
+        @site_dir   = @options[:site_dir]
+        @remote     = @options[:remote]     || 'deploy'
+        @deploy_dir = @options[:deploy_dir] || '.deploy'
+        abort "Deploy Failed: You must provide a repository URL before deploying. Check your #{@options[:config_file]}.".red if @repo.nil?
       end
 
       # Initialize, pull, copy and deploy.
@@ -53,6 +31,12 @@ FILE
         end
       end
 
+      def self.default_config(options={})
+        config = <<-CONFIG
+git_url: #{options[:git_url]}
+git_branch: #{options[:git_branch] || 'master'}
+CONFIG
+      end
 
       # If necessary create deploy directory and initialize it with deployment remote
       #
@@ -64,6 +48,7 @@ FILE
             # Attempt to clone from the remote
             #
             cmd = "git clone #{@repo} --origin #{@remote} --branch #{@branch} ."
+            puts cmd
             Open3.popen3(cmd) do |stdin, stdout, stderr, wait_thr|
               exit_status = wait_thr.value
 
@@ -101,30 +86,6 @@ FILE
           message = "Site updated at: #{Time.now.utc}"
           `git add --all :/; git commit -m '#{message}'`
         end
-      end
-
-      def ask_bool(message)
-        ask(message, ['y','n']) == 'y'
-      end
-
-      def ask(message, valid_options)
-        if valid_options
-          options = valid_options.join '/'
-          answer = get_stdin("#{message} [#{options}]: ").downcase.strip
-          if valid_options.map{|o| o.downcase}.include?(answer)
-            return answer
-          else
-            return false
-          end
-        else
-          answer = get_stdin("#{message}: ")
-        end
-        answer
-      end
-            
-      def get_stdin(message)
-        print message
-        STDIN.gets.chomp
       end
     end
   end
