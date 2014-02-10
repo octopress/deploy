@@ -1,0 +1,7 @@
+source 'https://rubygems.org'
+
+group :jekyll_plugins do
+  gem "octopress-deploy", path: "../"
+end
+
+gem "pry-debugger"
