@@ -87,12 +87,12 @@ FILE
       if !File.exist?(gitignore) ||
         Pathname.new(gitignore).read.match(/#{@options[:config_file]}/i).nil?
         if ask_bool("Do you want to add #{@options[:config_file]} to your .gitignore?")
-          gitignore_config_file
+          git_ignore_config_file
         end
       end
     end
 
-    def self.gitignore_config_file
+    def self.git_ignore_config_file
       File.open('.gitignore', 'ab') { |f| f.write(@options[:config_file]) }
     end
 
