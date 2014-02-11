@@ -4,7 +4,10 @@ require "YAML"
 require 'colorator'
 require 'open3'
 
-require 'octopress-deploy/cli'
+if defined? Octopress::Command
+  require 'octopress-deploy/cli'
+end
+
 
 module Octopress
   module Deploy
