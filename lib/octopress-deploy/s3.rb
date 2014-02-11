@@ -23,9 +23,8 @@ module Octopress
 
       def push
         puts "Syncing #{@local} files to #{@bucket_name} on S3."
-        @bucket = connect
         write_files
-        delete_files if @delete
+        delete_files if delete_files?
         status_message
         Deploy.check_gitignore
       end
@@ -68,6 +67,10 @@ module Octopress
         end
       end
 
+      def delete_files?
+        !!@delete
+      end
+
       # local site files
       def site_files
         @site_files ||= Find.find(@local).to_a.reject do |f|
@@ -88,7 +91,7 @@ module Octopress
       # Files from the bucket which are deletable
       # Only deletes files beneath the remote_path if specified
       def deletable_files
-        return [] unless @delete
+        return [] unless delete_files?
         unless @deletable
           @deletable = @bucket.objects.map(&:key) - site_files_dest
           @deletable.reject!{|f| (f =~ /^#{@remote_path}/).nil? }
