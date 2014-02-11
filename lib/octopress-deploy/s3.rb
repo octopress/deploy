@@ -62,7 +62,7 @@ module Octopress
       end
 
       def pluralize(str, num)
-        str << 's' if num == 0 || num > 1
+        str << 's' if num != 1
         str
       end
       def progress
