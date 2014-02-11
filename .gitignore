@@ -17,3 +17,4 @@ test/version_tmp
 tmp
 test/.deploy
 deploy_target
+_s3_deploy.yml

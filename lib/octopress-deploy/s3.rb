@@ -15,37 +15,42 @@ module Octopress
         @bucket_name = options[:bucket_name]
         @access_key  = options[:access_key_id]
         @secret_key  = options[:secret_access_key]
+        @region      = options[:region] || 'us-east-1'
+        @remote_path = (options[:remote_path] || '/').sub(/^\//,'')
         @delete      = options[:delete]
         @verbose     = options[:verbose] || true
-        @remote_path = (options[:remote_path] || '/').sub(/^\//,'')
-        @bucket = connect
+        connect
+        #require 'pry-debugger'
+        #binding.pry
       end
 
       def push
+        abort "Seriously, you should. Quitting..." unless Deploy.check_gitignore
         puts "Syncing #{@local} files to #{@bucket_name} on S3."
         write_files
         delete_files if delete_files?
         status_message
-        Deploy.check_gitignore
       end
 
       # Connect to S3 using the AWS SDK
       # Retuns an aws bucket
       def connect
-        AWS.config(access_key_id: @access_key, secret_access_key: @secret_key)
-        bucket = AWS.s3.buckets[@bucket_name]
-        abort "S3 bucket '#{@bucket_name}' not found." unless bucket.exists?
-        bucket
+        AWS.config(access_key_id: @access_key, secret_access_key: @secret_key, region: @region)
+        s3 = AWS.s3
+        @bucket = s3.buckets[@bucket_name]
+        unless @bucket.exists? || create_bucket(s3.buckets)
+          abort "No bucket created. Change your config to point to an existing bucket."
+        end
       end
 
       # Write site files to the selected bucket
       def write_files
         puts "Writing #{pluralize('file', site_files.size)}:" if @verbose
         site_files.each do |file| 
-          o = @bucket.objects[dest_path(file)]
+          o = @bucket.objects[remote_path(file)]
           o.write(file: file)
           if @verbose
-            puts "+ #{dest_path(file)}"
+            puts "+ #{remote_path(file)}"
           else
             progress('+')
           end
@@ -67,6 +72,31 @@ module Octopress
         end
       end
 
+      def create_bucket(buckets)
+        if Deploy.ask_bool("S3 bucket '#{@bucket_name}' not found. Create one in region #{@region}?")
+          @bucket = buckets.create(@bucket_name)
+          puts "Created new bucket #{@bucket_name} in region #{@region}."
+
+          configure_bucket
+          true
+        end
+      end
+
+      def configure_bucket
+        error_page = remote_path('404.html')
+        index_page = remote_path('index.html')
+
+        if Deploy.ask_bool("Bucket is not currently configured as a static websites. Configure it with index_page: #{index_page} and error_page: #{error_page}?")
+          config = @bucket.configure_website do |cfg|
+            cfg.index_document_suffix = index_page
+            cfg.error_document_key = error_page
+          end
+          puts "Bucket configured with index_document: #{index_page} and error_document: #{error_page}."
+        else
+          puts "You'll want to configure your new bucket using the AWS management console."
+        end
+      end
+
       def delete_files?
         !!@delete
       end
@@ -80,11 +110,11 @@ module Octopress
 
       # Destination paths for local site files.
       def site_files_dest
-        @site_files_dest ||= site_files.map{|f| dest_path(f) }
+        @site_files_dest ||= site_files.map{|f| remote_path(f) }
       end
 
       # Replace local path with remote path
-      def dest_path(file)
+      def remote_path(file)
         File.join(@remote_path, file.sub(@local, '')).sub(/^\//, '')
       end
 
@@ -107,6 +137,7 @@ module Octopress
         message =  "\nSuccess:".green + " #{uploaded} #{pluralize('file', uploaded)} uploaded"
         message << ", #{deleted} #{pluralize('file', deleted)} deleted."
         puts message
+        configure_bucket unless @bucket.website?
       end
 
       # Print consecutive characters
@@ -126,6 +157,7 @@ module Octopress
 bucket_name: #{options[:bucket_name]}
 access_key_id: #{options[:access_key_id]}
 secret_access_key: #{options[:secret_access_key]}
+region: #{options[:region] || 'us-east-1'}
 remote_path: #{options[:remote_path] || '/'}
 delete: #{options[:delete] || 'false'}
 verbose: #{options[:verbose] || 'true'}

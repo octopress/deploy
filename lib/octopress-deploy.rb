@@ -82,17 +82,20 @@ FILE
     end
 
     def self.check_gitignore
-      gitignore = File.expand_path('.gitignore')
+      gitignore = File.join(`git rev-parse --show-toplevel`.strip, ".gitignore")
       if !File.exist?(gitignore) ||
         Pathname.new(gitignore).read.match(/^#{@options[:config_file]}/i).nil?
         if ask_bool("Do you want to add #{@options[:config_file]} to your .gitignore?")
-          git_ignore_config_file
+          git_ignore_config_file gitignore
+          return true
         end
+      else
+        return true
       end
     end
 
-    def self.git_ignore_config_file
-      File.open('.gitignore', 'a') { |f| f.write(@options[:config_file]) }
+    def self.git_ignore_config_file(gitignore)
+      File.open(gitignore, 'a') { |f| f.write(@options[:config_file]) }
     end
 
     def self.ask_bool(message)
