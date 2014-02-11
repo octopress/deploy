@@ -2,7 +2,7 @@
 
 Deployment tools for Octopress and Jekyll blogs (or really any static site).
 
-Currently this supports deploying through Git and Rsync. Requests for other
+Currently this supports deploying through S3, Git and Rsync. Requests for other
 deployment methods are welcome.
 
 ## Installation
@@ -46,6 +46,19 @@ Configurations should be added to a `_deploy.yml` file in your project's root di
 | `config_file` | Path to the config file.                         | _config.yml    |
 | `site_dir`    | Path to comipled site files.                     | _site          |
 
+
+### Amazon S3 options
+
+Important: when using S3, be sure to add your _deploy.yml to your .gitignore to prevent accidentally sharing
+account access information.
+
+| option              | Description                                      | Default
+|:--------------------|:-------------------------------------------------|:---------------|
+| `bucket`            | S3 bucket name                                   |                |
+| `access_key_id`     | AWS access key                                   |                |
+| `secret_access_key  | AWS secret key                                   |                |
+| `delte`             | Delete files to create a 1:1 file sync.          | false          |
+| `verbose`           | Display all file actions during deploy.          | true           |
 
 ### Git options
 
