@@ -52,13 +52,19 @@ Configurations should be added to a `_deploy.yml` file in your project's root di
 Important: when using S3, be sure to add your _deploy.yml to your .gitignore to prevent accidentally sharing
 account access information.
 
-| option              | Description                                      | Default
-|:--------------------|:-------------------------------------------------|:---------------|
-| `bucket`            | S3 bucket name                                   |                |
-| `access_key_id`     | AWS access key                                   |                |
-| `secret_access_key  | AWS secret key                                   |                |
-| `delte`             | Delete files to create a 1:1 file sync.          | false          |
-| `verbose`           | Display all file actions during deploy.          | true           |
+| option              | Description                              | Default
+|:--------------------|:-----------------------------------------|:-------------|
+| `bucket_name`       | S3 bucket name                           |              |
+| `access_key_id`     | AWS access key                           |              |
+| `secret_access_key  | AWS secret key                           |              |
+| `remote_path`       | Directory files should be synced to.     | /            |
+| `delete`            | Delete files to create a 1:1 file sync.  | false        |
+| `verbose`           | Display all file actions during deploy.  | true         |
+
+#### On deleting files
+
+If the `delete` option is true, files in the `remote_path` on the bucket will be removed if they do not match local site files.
+If `remote_path` is a subdirectory, only files in that subdirectory will be evaluated for deletion.
 
 ### Git options
 
