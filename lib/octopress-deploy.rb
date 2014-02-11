@@ -1,6 +1,5 @@
 require 'octopress-deploy/version'
 require 'octopress-deploy/core_ext'
-require 'YAML'
 require 'colorator'
 require 'open3'
 
@@ -13,10 +12,12 @@ module Octopress
   module Deploy
     autoload :Git,    'octopress-deploy/git'
     autoload :Rsync,  'octopress-deploy/rsync'
+    autoload :S3,     'octopress-deploy/s3'
 
     METHODS = {
       'git'=> Git,
-      'rsync'=> Rsync
+      'rsync'=> Rsync,
+      's3'=> S3
     }
 
     def self.push(options={})
@@ -36,7 +37,7 @@ module Octopress
     end
 
     def self.init_options(options={})
-      @options ||= options.to_symbol_keys
+      @options = options.to_symbol_keys
       @options[:config_file] ||= '_deploy.yml'
       @options[:site_dir] ||= site_dir
     end
@@ -56,8 +57,7 @@ module Octopress
     # Create a config file
     #
     def self.init_config(method=nil, options={})
-      init_options unless @options
-      @options ||= options
+      init_options(options) unless @options
       @options[:method] ||= method
       unless @options[:method]
         @options[:method] = ask("How would you like to deploy your site?", METHODS.keys)
@@ -66,11 +66,11 @@ module Octopress
 method: #{@options[:method]}
 site_dir: #{@options[:site_dir]}
 FILE
-      config += deploy_method.default_config(options)
+      config += deploy_method.default_config(@options)
 
       if File.exist? @options[:config_file]
         unless ask_bool("A config file already exists at #{@options[:config_file]}. Overwrite?")
-          abort "No config file written."
+          return puts "No config file written."
         end
       end
       File.open(@options[:config_file], 'w') { |f| f.write(config) }
@@ -82,10 +82,9 @@ FILE
     end
 
     def self.check_gitignore
-      init_options unless @options
       gitignore = File.expand_path('.gitignore')
       if !File.exist?(gitignore) ||
-        Pathname.new(gitignore).read.match(/#{@options[:config_file]}/i).nil?
+        Pathname.new(gitignore).read.match(/^#{@options[:config_file]}/i).nil?
         if ask_bool("Do you want to add #{@options[:config_file]} to your .gitignore?")
           git_ignore_config_file
         end
@@ -93,7 +92,7 @@ FILE
     end
 
     def self.git_ignore_config_file
-      File.open('.gitignore', 'ab') { |f| f.write(@options[:config_file]) }
+      File.open('.gitignore', 'a') { |f| f.write(@options[:config_file]) }
     end
 
     def self.ask_bool(message)

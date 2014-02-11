@@ -12,11 +12,16 @@ end
 
 def test_rsync
   FileUtils.mkdir_p "deploy-rsync"
-  Octopress::Deploy.init_config('rsync', remote_path: '.deploy')
+  Octopress::Deploy.init_config('rsync', remote_path: 'deploy-rsync')
   Octopress::Deploy.push()
   FileUtils.rm_r 'deploy-rsync'
 end
 
+def test_s3
+  Octopress::Deploy.push(config_file: '_s3_deploy.yml')
+end
+
 test_git
 test_rsync
+test_s3
 

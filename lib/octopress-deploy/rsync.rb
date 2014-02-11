@@ -3,14 +3,14 @@ module Octopress
     class Rsync
 
       def initialize(options)
-        @user = options[:user]
-        @port = options[:port] || "22"
-        @local = options[:site_dir]
-        @remote = options[:remote_path]
-        @exclude = options[:exclude]
+        @user         = options[:user]
+        @port         = options[:port] || "22"
+        @local        = options[:site_dir]
+        @remote       = options[:remote_path]
+        @exclude      = options[:exclude]
         @exclude_file = options[:exclude_file]
-        @include = options[:include]
-        @delete  = options[:delete]
+        @include      = options[:include]
+        @delete       = options[:delete]
       end
 
       def push
