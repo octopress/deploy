@@ -1,4 +1,5 @@
-require 'octopress-deploy'
+require File.expand_path("../../lib/octopress-deploy.rb", __FILE__)
+require 'fileutils'
 
 def test_git
   FileUtils.mkdir 'deploy_target'
