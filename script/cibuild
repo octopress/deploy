@@ -1,3 +1,4 @@
 #! /bin/bash
 
+export NO_ASK=true
 script/test
