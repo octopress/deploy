@@ -1,10 +1,6 @@
 require 'find'
 require 'fileutils'
-begin
-  require 'aws-sdk'
-rescue LoadError 
-  abort "You'll need to install the aws-sdk gem to deploy with S3."
-end
+require 'aws-sdk'
 
 module Octopress
   module Deploy
@@ -151,7 +147,7 @@ module Octopress
 
       # Return default configuration options for this deployment type
       def self.default_config(options={})
-        config = <<-CONFIG
+        <<-CONFIG
 bucket_name: #{options[:bucket_name]}
 access_key_id: #{options[:access_key_id]}
 secret_access_key: #{options[:secret_access_key]}

@@ -87,7 +87,7 @@ module Octopress
     end
 
     def self.get_config
-      config = <<-FILE
+      <<-FILE
 method: #{@options[:method]}
 site_dir: #{@options[:site_dir]}
 #{deploy_method.default_config(@options)}

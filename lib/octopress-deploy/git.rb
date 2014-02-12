@@ -36,7 +36,7 @@ module Octopress
       end
 
       def self.default_config(options={})
-        config = <<-CONFIG
+        <<-CONFIG
 git_url: #{options[:git_url]}
 git_branch: #{options[:git_branch] || 'master'}
 CONFIG

@@ -31,7 +31,7 @@ module Octopress
       end
 
       def self.default_config(options={})
-        config = <<-CONFIG
+        <<-CONFIG
 user: #{options[:user]}
 port: #{options[:port]}
 remote_path: #{options[:remote_path]}
