@@ -1,7 +1,6 @@
 require 'octopress-deploy/version'
 require 'octopress-deploy/core_ext'
 require 'colorator'
-require 'open3'
 
 if defined? Octopress::Command
   require 'octopress-deploy/cli'
