@@ -4,38 +4,26 @@ module Octopress
 
       def initialize(options)
         @user         = options[:user]
-        @port         = options[:port] || "22"
+        @port         = options[:port]
         @local        = options[:site_dir]
         @remote       = options[:remote_path]
         @exclude      = options[:exclude]
         @exclude_file = options[:exclude_file]
+        @exclude_file = File.expand_path(@exclude_file) if @exclude_file
         @include      = options[:include]
         @delete       = options[:delete]
       end
 
       def push
-        cmd = "rsync -avz"
-        if @exclude || @exclude_file
-          cmd << "e"
-          if @exclude_file
-            cmd << " --exclude-from #{@exclude_file}"
-          else
-            cmd << " --exclude #{@exclude}"
-          end
-        end
-        if @include
-          cmd << " --include #{@include}"
-        end
-        if @user
-          cmd << " ssh -p #{@port}"
-        end
-        if @delete
-          cmd << " --delete"
-        end
+        cmd =  "rsync -avz"
+        cmd << " -e"                               if @exclude_file || @exclude
+        cmd << " --exclude-from #{@exclude_file}"  if @exclude_file
+        cmd << " --exclude #{@exclude}"            if @exclude
+        cmd << " --include #{@include}"            if @include
+        cmd << " --rsh='ssh -p#{@port}'"           if @user && @port
+        cmd << " --delete"                         if @delete
         cmd += " #{File.join(@local, '')} "
-        if @user
-          cmd << "#{@user}:"
-        end
+        cmd << "#{@user}:"                         if @user
         cmd << "#{@remote}"
 
         system cmd
@@ -44,7 +32,7 @@ module Octopress
       def self.default_config(options={})
         config = <<-CONFIG
 user: #{options[:user]}
-port: #{options[:port] || '22'}
+port: #{options[:port]}
 remote_path: #{options[:remote_path]}
 delete: #{options[:delete]}
 CONFIG

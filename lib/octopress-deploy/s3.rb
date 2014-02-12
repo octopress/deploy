@@ -20,8 +20,6 @@ module Octopress
         @delete      = options[:delete]
         @verbose     = options[:verbose] || true
         connect
-        #require 'pry-debugger'
-        #binding.pry
       end
 
       def push

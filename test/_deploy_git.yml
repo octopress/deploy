@@ -1,0 +1,4 @@
+method: git
+site_dir: _site
+git_url: git@github.com:octopress/deploy
+git_branch: test_git_deploy

@@ -59,26 +59,36 @@ module Octopress
     def self.init_config(method=nil, options={})
       init_options(options) unless @options
       @options[:method] ||= method
+
       unless @options[:method]
         @options[:method] = ask("How would you like to deploy your site?", METHODS.keys)
       end
-      config = <<-FILE
-method: #{@options[:method]}
-site_dir: #{@options[:site_dir]}
-FILE
-      config += deploy_method.default_config(@options)
 
-      if File.exist? @options[:config_file]
-        unless ask_bool("A config file already exists at #{@options[:config_file]}. Overwrite?")
-          return puts "No config file written."
-        end
+      write_config
+      check_gitignore
+    end
+
+    def self.write_config
+      if File.exist?(@options[:config_file]) &&
+       !ask_bool("A config file already exists at #{@options[:config_file]}. Overwrite?")
+       return puts "No config file written."
       end
+
+      config = get_config.strip
       File.open(@options[:config_file], 'w') { |f| f.write(config) }
       puts "File #{@options[:config_file]} created.".green
       puts "------------------"
-      puts "#{config.yellow}------------------"
+      puts "#{config.yellow}"
+      puts "------------------"
       puts "Please add your configurations to this file."
-      check_gitignore
+    end
+
+    def self.get_config
+      config = <<-FILE
+method: #{@options[:method]}
+site_dir: #{@options[:site_dir]}
+#{deploy_method.default_config(@options)}
+FILE
     end
 
     def self.check_gitignore
