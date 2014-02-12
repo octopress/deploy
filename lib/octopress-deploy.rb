@@ -100,13 +100,13 @@ FILE
     end
 
     def self.ask_bool(message)
-      if_tty_otherwise(true, message) do
+      ask_or_default(true, message) do
         ask(message, ['y','n']) == 'y'
       end
     end
 
     def self.ask(message, valid_options)
-      if_tty_otherwise(false, message) do
+      ask_or_default(false, message) do
         if valid_options
           options = valid_options.join '/'
           answer = get_stdin("#{message} [#{options}]: ").downcase.strip
@@ -127,11 +127,15 @@ FILE
       STDIN.gets.chomp
     end
 
-    def self.if_tty_otherwise(default, message)
-      if ENV['CONTINUOUS_INTEGRATION'].eql?("true")
-        puts "Assuming '#{default}' for '#{message}'."
-      else
+    def self.should_ask?
+      !ENV['NO_ASK']
+    end
+
+    def self.ask_or_default(default, message)
+      if should_ask?
         yield
+      else
+        puts "Assuming '#{default}' for '#{message}'."
       end
     end
   end
