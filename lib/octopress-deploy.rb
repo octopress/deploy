@@ -1,8 +1,11 @@
+$LOAD_PATH.unshift File.expand_path("../", __FILE__)
+
 require 'octopress-deploy/version'
 require 'octopress-deploy/core_ext'
-require 'YAML'
+require 'yaml'
 require 'colorator'
 require 'open3'
+require 'pathname'
 
 if defined? Octopress::Command
   require 'octopress-deploy/cli'
@@ -97,27 +100,39 @@ FILE
     end
 
     def self.ask_bool(message)
-      ask(message, ['y','n']) == 'y'
+      if_tty_otherwise(true, message) do
+        ask(message, ['y','n']) == 'y'
+      end
     end
 
     def self.ask(message, valid_options)
-      if valid_options
-        options = valid_options.join '/'
-        answer = get_stdin("#{message} [#{options}]: ").downcase.strip
-        if valid_options.map{|o| o.downcase}.include?(answer)
-          return answer
+      if_tty_otherwise(false, message) do
+        if valid_options
+          options = valid_options.join '/'
+          answer = get_stdin("#{message} [#{options}]: ").downcase.strip
+          if valid_options.map{|o| o.downcase}.include?(answer)
+            return answer
+          else
+            return false
+          end
         else
-          return false
+          answer = get_stdin("#{message}: ")
         end
-      else
-        answer = get_stdin("#{message}: ")
+        answer
       end
-      answer
     end
           
     def self.get_stdin(message)
       print message
       STDIN.gets.chomp
+    end
+
+    def self.if_tty_otherwise(default, message)
+      if ENV['CONTINUOUS_INTEGRATION'].eql?("true")
+        puts "Assuming '#{default}' for '#{message}'."
+      else
+        yield
+      end
     end
   end
 end
