@@ -37,7 +37,7 @@ def test_s3
 end
 
 setup_tests
-test_git
+#test_git
 test_rsync
 #test_s3
 cleanup
