@@ -128,10 +128,10 @@ FILE
     end
 
     def self.if_tty_otherwise(default, message)
-      if $stdout.tty?
-        yield
-      else
+      if ENV['CONTINUOUS_INTEGRATION'].eql?("true")
         puts "Assuming '#{default}' for '#{message}'."
+      else
+        yield
       end
     end
   end
