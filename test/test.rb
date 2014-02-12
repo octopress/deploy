@@ -1,5 +1,10 @@
-require 'octopress-deploy'
+require File.expand_path("../../lib/octopress-deploy.rb", __FILE__)
+require 'fileutils'
 require 'find'
+
+def test_file(*subpaths)
+  File.expand_path(File.join(*subpaths), File.dirname(__FILE__))
+end
 
 def setup_tests
   system "cp -r source/ _site"

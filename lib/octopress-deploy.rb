@@ -1,6 +1,10 @@
+$LOAD_PATH.unshift File.expand_path("../", __FILE__)
+
 require 'octopress-deploy/version'
 require 'octopress-deploy/core_ext'
 require 'colorator'
+require 'yaml'
+require 'pathname'
 
 if defined? Octopress::Command
   require 'octopress-deploy/cli'
@@ -108,27 +112,43 @@ FILE
     end
 
     def self.ask_bool(message)
-      ask(message, ['y','n']) == 'y'
+      ask_or_default(true, message) do
+        ask(message, ['y','n']) == 'y'
+      end
     end
 
     def self.ask(message, valid_options)
-      if valid_options
-        options = valid_options.join '/'
-        answer = get_stdin("#{message} [#{options}]: ").downcase.strip
-        if valid_options.map{|o| o.downcase}.include?(answer)
-          return answer
+      ask_or_default(false, message) do
+        if valid_options
+          options = valid_options.join '/'
+          answer = get_stdin("#{message} [#{options}]: ").downcase.strip
+          if valid_options.map{|o| o.downcase}.include?(answer)
+            return answer
+          else
+            return false
+          end
         else
-          return false
+          answer = get_stdin("#{message}: ")
         end
-      else
-        answer = get_stdin("#{message}: ")
+        answer
       end
-      answer
     end
           
     def self.get_stdin(message)
       print message
       STDIN.gets.chomp
+    end
+
+    def self.should_ask?
+      !ENV['NO_ASK']
+    end
+
+    def self.ask_or_default(default, message)
+      if should_ask?
+        yield
+      else
+        puts "Assuming '#{default}' for '#{message}'."
+      end
     end
   end
 end
