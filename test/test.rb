@@ -7,6 +7,10 @@ def test_file(*subpaths)
 end
 
 def setup_tests
+  if ENV['CI']==true
+    `echo -e "Host github.com\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config`
+    `echo -e "Host imathis.com\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config`
+  end
   system "cp -r source/ _site"
   Find.find('_site').to_a.each do |f| 
     system("echo '#{garbage}' >> #{f}") unless File.directory?(f)
