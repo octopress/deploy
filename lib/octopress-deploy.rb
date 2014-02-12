@@ -5,6 +5,7 @@ require 'octopress-deploy/core_ext'
 require 'YAML'
 require 'colorator'
 require 'open3'
+require 'pathname'
 
 if defined? Octopress::Command
   require 'octopress-deploy/cli'

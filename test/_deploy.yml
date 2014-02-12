@@ -1,4 +1,0 @@
-method: git
-site_dir: _site
-git_url: /Users/imathis/workspace/octodev/deploy/test/deploy_target
-git_branch: master
