@@ -2,7 +2,7 @@ $LOAD_PATH.unshift File.expand_path("../", __FILE__)
 
 require 'octopress-deploy/version'
 require 'octopress-deploy/core_ext'
-require 'YAML'
+require 'yaml'
 require 'colorator'
 require 'open3'
 require 'pathname'
