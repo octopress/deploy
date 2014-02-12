@@ -26,6 +26,7 @@ module Octopress
         cmd << "#{@user}:"                         if @user
         cmd << "#{@remote}"
 
+        puts "Syncing #{@local} files to #{@remote} with rsync."
         system cmd
       end
 

@@ -6,7 +6,7 @@ module Octopress
         @options    = options
         @repo       = @options[:git_url]
         @branch     = @options[:git_branch]
-        @site_dir   = File.expand_path @options[:site_dir]
+        @site_dir   = File.expand_path(@options[:site_dir])
         @remote     = @options[:remote]     || 'deploy'
         @deploy_dir = File.expand_path @options[:deploy_dir] || '.deploy'
         abort "Deploy Failed: Configure a git_url in #{@options[:config_file]} before deploying.".red if @repo.nil?
@@ -20,6 +20,7 @@ module Octopress
           git_pull
           clean_deploy
           copy_site
+          puts "Syncing #{@options[:site_dir]} files to #{@repo}."
           git_push
         end
       end
