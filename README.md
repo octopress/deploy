@@ -29,13 +29,17 @@ $ octopress deploy
 
 This will read from your configuration file `_deploy.yml` and deploy your site. If your site has no configuration file, you will be asked if you want to generate one and what deployment method you want to use.
 
-You can also generate a configuration by running:
+You can also generate a `./_deploy.yml` configuration file by running:
 
 ```bash
 $ octopress deploy --init git # or 'rsync' or 's3'
 ```
 
-This will generate a '_deploy.yml' file in your current directory.
+Once you've deployed your site, you can also pull it back down into a local directory. This is mostly useful for checking the results of a deploy. This will create the directory if it doesn't already exist.
+
+```ruby
+Octopress::Deploy.pull('some_directory')
+```
 
 ### Configuration options
 
