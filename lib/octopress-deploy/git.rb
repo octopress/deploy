@@ -3,12 +3,15 @@ module Octopress
     class Git
 
       def initialize(options={})
-        @options    = options
-        @repo       = @options[:git_url]
-        @branch     = @options[:git_branch]
-        @site_dir   = File.expand_path(@options[:site_dir])
-        @remote     = @options[:remote]     || 'deploy'
-        @deploy_dir = File.expand_path @options[:deploy_dir] || '.deploy'
+        @options     = options
+        @repo        = @options[:git_url]
+        @branch      = @options[:git_branch]
+        @remote      = @options[:remote]       || 'deploy'
+        @remote_path = @options[:remote_path]  || ''
+        @remote_path = @remote_path.sub(/^\//,'') #remove leading slash
+        @site_dir    = File.expand_path(@options[:site_dir])
+        @deploy_dir  = File.expand_path(@options[:deploy_dir] || '.deploy')
+        @pull_dir    = @options[:pull_dir]
         abort "Deploy Failed: Configure a git_url in #{@options[:config_file]} before deploying.".red if @repo.nil?
       end
 
@@ -16,13 +19,17 @@ module Octopress
       #
       def push
         init_repo
+        puts "Syncing #{@site_dir.sub(`pwd`.strip+'/', '')} files to #{@repo}."
         FileUtils.cd @deploy_dir do
           git_pull
           clean_deploy
           copy_site
-          puts "Syncing #{@options[:site_dir]} files to #{@repo}."
           git_push
         end
+      end
+
+      def pull
+        `git clone -b #{@branch} #{@repo} #{@pull_dir}`
       end
 
       # Check to see if local deployment dir is configured to deploy.
@@ -92,7 +99,8 @@ CONFIG
       # Copy site files into deploy dir.
       #
       def copy_site
-        FileUtils.cp_r @site_dir + '/.', @deploy_dir
+        target_dir = File.join(@deploy_dir, @remote_path).sub(/\/$/,'')
+        FileUtils.cp_r @site_dir + '/.', target_dir
         message = "Site updated at: #{Time.now.utc}"
         `git add --all :/; git commit -m '#{message}'`
       end

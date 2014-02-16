@@ -9,12 +9,14 @@ module Octopress
       def initialize(options)
         @local       = options[:site_dir]
         @bucket_name = options[:bucket_name]
-        @access_key  = options[:access_key_id]
-        @secret_key  = options[:secret_access_key]
-        @region      = options[:region] || 'us-east-1'
-        @remote_path = (options[:remote_path] || '/').sub(/^\//,'')
+        @access_key  = options[:access_key_id]     || ENV['AWS_ACCESS_KEY_ID']
+        @secret_key  = options[:secret_access_key] || ENV['AWS_SECRET_ACCESS_KEY']
+        @region      = options[:region]            || ENV['AWS_DEFAULT_REGION'] || 'us-east-1'
+        @remote_path = (options[:remote_path]      || '/').sub(/^\//,'')
+        @verbose     = options[:verbose]           || true
         @delete      = options[:delete]
-        @verbose     = options[:verbose] || true
+        @remote_path = @remote_path.sub(/^\//,'')  # remove leading slash
+        @pull_dir    = options[:pull_dir]
         connect
       end
 
@@ -24,6 +26,16 @@ module Octopress
         write_files
         delete_files if delete_files?
         status_message
+      end
+
+      def pull
+        puts "Syncing #{@bucket_name} files to #{@pull_dir} on S3."
+        @bucket.objects.each do |object|
+          path = File.join(@pull_dir, object.key)
+          dir = File.dirname(path)
+          FileUtils.mkdir_p(dir) unless Dir.exist?(dir)
+          File.open(path, 'w') { |f| f.write(object.read) }
+        end
       end
 
       # Connect to S3 using the AWS SDK
@@ -67,6 +79,7 @@ module Octopress
       end
 
       def create_bucket(buckets)
+
         if Deploy.ask_bool("S3 bucket '#{@bucket_name}' not found. Create one in region #{@region}?")
           @bucket = buckets.create(@bucket_name)
           puts "Created new bucket #{@bucket_name} in region #{@region}."

@@ -1,6 +1,6 @@
 method: rsync
 site_dir: _site
 user: imathis@imathis.com
-port: 22
+port: 
 remote_path: ~/octopress-deploy/rsync/
 delete:

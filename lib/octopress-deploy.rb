@@ -33,6 +33,19 @@ module Octopress
       end
     end
 
+    def self.pull(dir, options={})
+      init_options(options)
+      if !File.exists? @options[:config_file]
+        init_config if ask_bool("Deployment config file not found. Create #{@options[:config_file]}?")
+      else
+        parse_options
+        if !File.exists? @options[:pull_dir] = dir
+          FileUtils.mkdir_p @options[:pull_dir]
+        end
+        deploy_method.new(@options).pull()
+      end
+    end
+
     def self.parse_options
       config  = YAML.load(File.open(@options[:config_file])).to_symbol_keys
       @options = @options.to_symbol_keys
@@ -59,9 +72,11 @@ module Octopress
 
     # Create a config file
     #
-    def self.init_config(method=nil, options={})
-      init_options(options) unless @options
-      @options[:method] ||= method
+    def self.init_config(method=nil, options=nil)
+      if options
+        options[:method] = method
+        init_options(options)
+      end
 
       unless @options[:method]
         @options[:method] = ask("How would you like to deploy your site?", METHODS.keys)
@@ -72,9 +87,11 @@ module Octopress
     end
 
     def self.write_config
-      if File.exist?(@options[:config_file]) &&
-       !ask_bool("A config file already exists at #{@options[:config_file]}. Overwrite?")
-       return puts "No config file written."
+      if !@options[:force_write_config]
+        if File.exist?(@options[:config_file]) &&
+         !ask_bool("A config file already exists at #{@options[:config_file]}. Overwrite?")
+         return puts "No config file written."
+        end
       end
 
       config = get_config.strip

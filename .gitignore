@@ -18,4 +18,11 @@ tmp
 test/.deploy
 deploy_target
 _s3_deploy.yml
-
+_rsync_deploy.yml
+_git_deploy.yml
+pull-git
+pull-rsync
+pull-s3
+_site
+local-git
+local-rsync
