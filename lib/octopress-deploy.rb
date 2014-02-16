@@ -33,7 +33,7 @@ module Octopress
       end
     end
 
-    def self.pull(dir, options={})
+    def self.pull(dir='site-pull', options={})
       init_options(options)
       if !File.exists? @options[:config_file]
         init_config if ask_bool("Deployment config file not found. Create #{@options[:config_file]}?")
