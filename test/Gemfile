@@ -5,3 +5,4 @@ group :jekyll_plugins do
 end
 
 gem "pry-debugger"
+gem "aws-sdk"

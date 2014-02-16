@@ -2,7 +2,7 @@
 
 Deployment tools for Octopress and Jekyll blogs (or really any static site).
 
-Currently this supports deploying through Git and Rsync. Requests for other
+Currently this supports deploying through S3, Git and Rsync. Requests for other
 deployment methods are welcome.
 
 ## Installation
@@ -41,28 +41,61 @@ This will generate a '_deploy.yml' file in your current directory.
 
 Configurations should be added to a `_deploy.yml` file in your project's root directory. You can pass options as a hash directy to the `push` method as well. Passed options will override options set in the config file.
 
-| option        | Description                                      | Default
+| Config        | Description                                      | Default
 |:--------------|:-------------------------------------------------|:---------------|
 | `config_file` | Path to the config file.                         | _config.yml    |
 | `site_dir`    | Path to comipled site files.                     | _site          |
 
 
-### Git options
+#### Amazon S3
+
+Important: when using S3, you must add your _deploy.yml to your .gitignore to prevent accidentally sharing
+account access information. Octopress Deploy will offer to do it for you. If you don't, you won't be able to deploy.`
+
+| Config              | Description                              | Default
+|:--------------------|:-----------------------------------------|:-------------|
+| `bucket_name`       | S3 bucket name                           |              |
+| `access_key_id`     | AWS access key                           |              |
+| `secret_access_key  | AWS secret key                           |              |
+| `remote_path`       | Directory files should be synced to.     | /            |
+| `delete`            | Delete files to create a 1:1 file sync.  | false        |
+| `verbose`           | Display all file actions during deploy.  | true         |
+| `region`            | Region for your AWS bucket               | us-east-1    |
+
+If you choose a bucket which doesn't yet exist, Octopress Deploy will offer to create it for you, and offer to configure it as a static website.
+
+##### ENV config
+
+For the following configurations you can set environment vars instead of adding items to your config file.
+
+| Config              | ENV var                        |
+|:--------------------|:-------------------------------|
+| `access_key_id`     | AWS_ACCESS_KEY_ID              |
+| `secret_access_key  | AWS_SECRET_ACCESS_KEY          |
+| `region`            | AWS_DEFAULT_REGIONS            |
+
+
+##### Deleting files from S3
+
+If the `delete` option is true, files in the `remote_path` on the bucket will be removed if they do not match local site files.
+If `remote_path` is a subdirectory, only files in that subdirectory will be evaluated for deletion.
+
+#### Git
 
 Only `git_url` is required. Other options will default as shown below.
 
-| option        | Description                                      | Default
+| Config        | Description                                      | Default
 |:--------------|:-------------------------------------------------|:---------------|
 | `git_url`     | Url for remote git repository.                   |                |
 | `git_branch`  | Deployment branch for git repository.            | master         |
 | `deploy_dir`  | Directory where deployment files are staged.     | .deploy        |
 | `remote`      | Name of git remote.                              | deploy         |
 
-### Rsync options
+#### Rsync
 
 Only `remote_path` is required. If `user` is not present, Rsync will sync between two locally available directories. Do this if your site root is mounted locally.
 
-| option         | Description                                       | Default
+| Config         | Description                                       | Default
 |:---------------|:--------------------------------------------------|:---------------|
 | `user`         | ssh user, e.g user@host.com                       |                |
 | `port`         | ssh port                                          | 22             |
