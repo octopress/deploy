@@ -31,7 +31,7 @@ This will read from your configuration file `_deploy.yml` and deploy your site. 
 
 You can also generate a configuration by running:
 
-```ruby
+```bash
 $ octopress deploy --init git # or 'rsync' or 's3'
 ```
 
