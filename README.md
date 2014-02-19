@@ -23,16 +23,16 @@ Or install it yourself as:
 
 To deploy your site run:
 
-```ruby
-Octopress::Deploy.push()
+```bash
+$ octopress deploy
 ```
 
 This will read from your configuration file `_deploy.yml` and deploy your site. If your site has no configuration file, you will be asked if you want to generate one and what deployment method you want to use.
 
 You can also generate a configuration by running:
 
-```ruby
-Octopress::Deploy.init_cofig('git') # or 'rsync'
+```bash
+$ octopress deploy --init git # or 'rsync' or 's3'
 ```
 
 This will generate a '_deploy.yml' file in your current directory.
@@ -56,7 +56,7 @@ account access information. Octopress Deploy will offer to do it for you. If you
 |:--------------------|:-----------------------------------------|:-------------|
 | `bucket_name`       | S3 bucket name                           |              |
 | `access_key_id`     | AWS access key                           |              |
-| `secret_access_key  | AWS secret key                           |              |
+| `secret_access_key` | AWS secret key                           |              |
 | `remote_path`       | Directory files should be synced to.     | /            |
 | `delete`            | Delete files to create a 1:1 file sync.  | false        |
 | `verbose`           | Display all file actions during deploy.  | true         |
@@ -71,7 +71,7 @@ For the following configurations you can set environment vars instead of adding 
 | Config              | ENV var                        |
 |:--------------------|:-------------------------------|
 | `access_key_id`     | AWS_ACCESS_KEY_ID              |
-| `secret_access_key  | AWS_SECRET_ACCESS_KEY          |
+| `secret_access_key` | AWS_SECRET_ACCESS_KEY          |
 | `region`            | AWS_DEFAULT_REGIONS            |
 
 
