@@ -1,8 +1,6 @@
 source 'https://rubygems.org'
 
-group :jekyll_plugins do
-  gem "octopress-deploy", path: "../"
-end
-
+gem "octopress", '~> 3.0.0.alpha.5'
+gem "octopress-deploy", path: "../"
 gem "pry-debugger"
 gem "aws-sdk"

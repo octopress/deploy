@@ -1,0 +1,6 @@
+method: rsync
+site_dir: _site
+user: 
+port: 
+remote_path: local-rsync
+delete:

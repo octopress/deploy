@@ -7,7 +7,7 @@ require 'yaml'
 require 'pathname'
 
 if defined? Octopress::Command
-  require 'octopress-deploy/cli'
+  require 'octopress-deploy/commands'
 end
 
 

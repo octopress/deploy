@@ -1,6 +1,6 @@
 module Octopress
   module Deploy
-    class Cli < Octopress::Command
+    class Commands < Octopress::Command
       def self.init_with_program(p)
         p.command(:deploy) do |c|
           c.syntax "octopress deploy [options]"
