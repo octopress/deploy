@@ -1,6 +1,10 @@
 require 'find'
 require 'fileutils'
-require 'aws-sdk'
+begin
+  require 'aws-sdk'
+rescue LoadError
+  abort "Please install the aws-sdk gem first."
+end
 
 module Octopress
   module Deploy

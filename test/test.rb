@@ -67,7 +67,7 @@ def test_remote_git
   
   # Test remote git deployment
   #
-  Octopress::Deploy.init_config('git', config_file: config, force_write_config: true, git_branch: 'test_git_deploy', git_url: repo)
+  Octopress::Deploy.init_config(method: 'git', config_file: config, force: true, git_branch: 'test_git_deploy', git_url: repo)
   Octopress::Deploy.push(config_file: config)
   Octopress::Deploy.pull('pull-git', config_file: config)
   diff_dir('_site', 'pull-git')
@@ -99,7 +99,7 @@ def test_remote_rsync
   
   # Test remote git deployment
   #
-  Octopress::Deploy.init_config('rsync', config_file: config, force_write_config: true, user: 'imathis@imathis.com', remote_path: '~/octopress-deploy/rsync/')
+  Octopress::Deploy.init_config(method: 'rsync', config_file: config, force: true, user: 'imathis@imathis.com', remote_path: '~/octopress-deploy/rsync/')
   Octopress::Deploy.push(config_file: config)
   Octopress::Deploy.pull('pull-rsync', config_file: config)
   diff_dir('_site', 'pull-rsync')
@@ -115,7 +115,7 @@ def test_local_rsync
 
   # Test local git deployment
   #
-  Octopress::Deploy.init_config('rsync', config_file: config, force_write_config: true, remote_path: 'local-rsync')
+  Octopress::Deploy.init_config(method: 'rsync', config_file: config, force: true, remote_path: 'local-rsync')
   Octopress::Deploy.push(config_file: config)
   Octopress::Deploy.pull('pull-rsync', config_file: config, user: false, remote_path: 'local-rsync')
   diff_dir('_site', 'pull-rsync')
