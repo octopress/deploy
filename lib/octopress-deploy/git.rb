@@ -5,13 +5,13 @@ module Octopress
       def initialize(options={})
         @options     = options
         @repo        = @options[:git_url]
-        @branch      = @options[:git_branch]
+        @branch      = @options[:git_branch]   || 'master'
         @remote      = @options[:remote]       || 'deploy'
         @remote_path = @options[:remote_path]  || ''
         @remote_path = @remote_path.sub(/^\//,'') #remove leading slash
-        @site_dir    = File.expand_path(@options[:site_dir])
+        @site_dir    = File.expand_path(@options[:site_dir])  || '_site'
         @deploy_dir  = File.expand_path(@options[:deploy_dir] || '.deploy')
-        @pull_dir    = @options[:pull_dir]
+        @pull_dir    = @options[:dir]
         abort "Deploy Failed: Configure a git_url in #{@options[:config_file]} before deploying.".red if @repo.nil?
       end
 
@@ -44,7 +44,12 @@ module Octopress
 
       def self.default_config(options={})
         <<-CONFIG
+# Remote git repository url
 git_url: #{options[:git_url]}
+
+# Branch defaults to master.
+# If using GitHub project pages, set the branch to 'gh-pages'.
+#
 git_branch: #{options[:git_branch] || 'master'}
 CONFIG
       end

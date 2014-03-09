@@ -1,6 +1,10 @@
 require 'find'
 require 'fileutils'
-require 'aws-sdk'
+begin
+  require 'aws-sdk'
+rescue LoadError
+  abort "Please install the aws-sdk gem first."
+end
 
 module Octopress
   module Deploy
@@ -16,7 +20,7 @@ module Octopress
         @verbose     = options[:verbose]           || true
         @delete      = options[:delete]
         @remote_path = @remote_path.sub(/^\//,'')  # remove leading slash
-        @pull_dir    = options[:pull_dir]
+        @pull_dir    = options[:dir]
         connect
       end
 

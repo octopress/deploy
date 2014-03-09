@@ -4,7 +4,6 @@ require 'octopress-deploy/version'
 require 'octopress-deploy/core_ext'
 require 'colorator'
 require 'yaml'
-require 'pathname'
 
 if defined? Octopress::Command
   require 'octopress-deploy/commands'
@@ -26,21 +25,21 @@ module Octopress
     def self.push(options={})
       init_options(options)
       if !File.exists? @options[:config_file]
-        init_config if ask_bool("Deployment config file not found. Create #{@options[:config_file]}?")
+        abort "No deployment config found. Create one with: octopress deploy init #{@options[:config_file]}"
       else
         parse_options
         deploy_method.new(@options).push()
       end
     end
 
-    def self.pull(dir='site-pull', options={})
+    def self.pull(options={})
       init_options(options)
       if !File.exists? @options[:config_file]
-        init_config if ask_bool("Deployment config file not found. Create #{@options[:config_file]}?")
+        abort "No deployment config found. Create one with: octopress deploy init #{@options[:config_file]}"
       else
         parse_options
-        if !File.exists? @options[:pull_dir] = dir
-          FileUtils.mkdir_p @options[:pull_dir]
+        if !File.exists? @options[:dir]
+          FileUtils.mkdir_p @options[:dir]
         end
         deploy_method.new(@options).pull()
       end
@@ -72,26 +71,21 @@ module Octopress
 
     # Create a config file
     #
-    def self.init_config(method=nil, options=nil)
-      if options
-        options[:method] = method
-        init_options(options)
+    def self.init_config(options={})
+
+      if !options[:method]
+        puts options[:method]
+        raise "Please provide a deployment method.", METHODS.keys
       end
 
-      unless @options[:method]
-        @options[:method] = ask("How would you like to deploy your site?", METHODS.keys)
-      end
-
+      init_options(options)
       write_config
       check_gitignore
     end
 
     def self.write_config
-      if !@options[:force_write_config]
-        if File.exist?(@options[:config_file]) &&
-         !ask_bool("A config file already exists at #{@options[:config_file]}. Overwrite?")
-         return puts "No config file written."
-        end
+      if File.exist?(@options[:config_file]) && !@options[:force]
+        abort "A config file already exists at #{@options[:config_file]}. Use --force to overwrite."
       end
 
       config = get_config.strip
@@ -111,60 +105,19 @@ site_dir: #{@options[:site_dir]}
 FILE
     end
 
+    # Checks the repository's .gitignore for the config file
+    #
+    # returns: Boolean - whether it is present or not.
+    #
     def self.check_gitignore
       gitignore = File.join(`git rev-parse --show-toplevel`.strip, ".gitignore")
+
       if !File.exist?(gitignore) ||
-        Pathname.new(gitignore).read.match(/^#{@options[:config_file]}/i).nil?
-        if ask_bool("Do you want to add #{@options[:config_file]} to your .gitignore?")
-          git_ignore_config_file gitignore
-          return true
-        end
+        File.open(gitignore).read.match(/^#{@options[:config_file]}/i).nil?
+        puts "Remember to add #{@options[:config_file]} to your .gitignore."
+        false
       else
-        return true
-      end
-    end
-
-    def self.git_ignore_config_file(gitignore)
-      File.open(gitignore, 'a') { |f| f.write(@options[:config_file]) }
-    end
-
-    def self.ask_bool(message)
-      ask_or_default(true, message) do
-        ask(message, ['y','n']) == 'y'
-      end
-    end
-
-    def self.ask(message, valid_options)
-      ask_or_default(false, message) do
-        if valid_options
-          options = valid_options.join '/'
-          answer = get_stdin("#{message} [#{options}]: ").downcase.strip
-          if valid_options.map{|o| o.downcase}.include?(answer)
-            return answer
-          else
-            return false
-          end
-        else
-          answer = get_stdin("#{message}: ")
-        end
-        answer
-      end
-    end
-          
-    def self.get_stdin(message)
-      print message
-      STDIN.gets.chomp
-    end
-
-    def self.should_ask?
-      !ENV['NO_ASK']
-    end
-
-    def self.ask_or_default(default, message)
-      if should_ask?
-        yield
-      else
-        puts "Assuming '#{default}' for '#{message}'."
+        true
       end
     end
   end

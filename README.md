@@ -32,7 +32,7 @@ This will read from your configuration file `_deploy.yml` and deploy your site. 
 You can also generate a `./_deploy.yml` configuration file by running:
 
 ```bash
-$ octopress deploy --init git # or 'rsync' or 's3'
+$ octopress deploy init git # or 'rsync' or 's3'
 ```
 
 Once you've deployed your site, you can also pull it back down into a local directory. This is mostly useful for checking the results of a deploy. This will create the directory if it doesn't already exist.

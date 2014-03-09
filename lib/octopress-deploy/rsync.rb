@@ -14,7 +14,7 @@ module Octopress
         @include      = @options[:include]
         @delete       = @options[:delete]
         @remote_path  = @remote_path.sub(/^\//,'') #remove leading slash
-        @pull_dir     = @options[:pull_dir]
+        @pull_dir     = @options[:dir]
       end
 
       def push
