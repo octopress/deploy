@@ -32,14 +32,14 @@ module Octopress
       end
     end
 
-    def self.pull(dir='site-pull', options={})
+    def self.pull(options={})
       init_options(options)
       if !File.exists? @options[:config_file]
         abort "No deployment config found. Create one with: octopress deploy init #{@options[:config_file]}"
       else
         parse_options
-        if !File.exists? @options[:pull_dir] = dir
-          FileUtils.mkdir_p @options[:pull_dir]
+        if !File.exists? @options[:dir]
+          FileUtils.mkdir_p @options[:dir]
         end
         deploy_method.new(@options).pull()
       end

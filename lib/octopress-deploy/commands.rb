@@ -5,17 +5,23 @@ module Octopress
         p.command(:deploy) do |c|
           c.syntax "deploy [options]"
           c.description "Deploy your Octopress site."
-          c.option "config_file", "--config FILE", "The path to your config file (default: _deploy.yml)"
-          c.option "using", "--using METHOD", "Define the push method to use, overriding your configuration file's setting"
-          c.option "pull", "--pull DIRECTORY", "Pull down the published copy of your site into a directory (default: ./site-pull)"
+          c.option "config_file", "--config <FILE>", "The path to your config file (default: _deploy.yml)"
+          c.option "using", "--using <METHOD>", "Define the push method to use, overriding your configuration file's setting"
 
           c.action do |args, options|
-            if options[:pull] and options[:pull].is_a?(String)
-              Octopress::Deploy.pull(options[:pull], options)
-            else
-              Octopress::Deploy.push(options)
-            end
+            Octopress::Deploy.push(options)
           end
+
+          c.command(:pull) do |c|
+            c.syntax "pull <DIRECTORY>"
+            c.description "Pull down the published copy of your site into a directory (default: ./site-pull)"
+            c.option "config_file", "--config <FILE>", "The path to your config file (default: _deploy.yml)"
+            c.option "using", "--using <METHOD>", "Define the push method to use, overriding your configuration file's setting"
+
+            c.action do |args, options|
+              options[:dir] = args.first
+              Octopress::Deploy.pull(options)
+            end
 
           c.command(:init) do |c|
             c.syntax 'init <METHOD> [options]'

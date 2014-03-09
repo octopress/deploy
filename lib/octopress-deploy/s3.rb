@@ -20,7 +20,7 @@ module Octopress
         @verbose     = options[:verbose]           || true
         @delete      = options[:delete]
         @remote_path = @remote_path.sub(/^\//,'')  # remove leading slash
-        @pull_dir    = options[:pull_dir]
+        @pull_dir    = options[:dir]
         connect
       end
 

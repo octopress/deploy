@@ -1,6 +1,5 @@
 source 'https://rubygems.org'
 
-gem "octopress", '~> 3.0.0.alpha.8'
 gem "octopress-deploy", path: "../"
 gem "pry-debugger"
 gem "aws-sdk"

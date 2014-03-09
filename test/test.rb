@@ -69,7 +69,7 @@ def test_remote_git
   #
   Octopress::Deploy.init_config(method: 'git', config_file: config, force: true, git_branch: 'test_git_deploy', git_url: repo)
   Octopress::Deploy.push(config_file: config)
-  Octopress::Deploy.pull('pull-git', config_file: config)
+  Octopress::Deploy.pull(dir: 'pull-git', config_file: config)
   diff_dir('_site', 'pull-git')
 end
 
@@ -86,7 +86,7 @@ def test_local_git
   # Test local git deployment
   #
   Octopress::Deploy.push(config_file: config, git_url: File.expand_path(repo), remote_path: 'site')
-  Octopress::Deploy.pull('pull-git', config_file: config, git_url: File.expand_path(repo), remote_path: 'site')
+  Octopress::Deploy.pull(dir: 'pull-git', config_file: config, git_url: File.expand_path(repo), remote_path: 'site')
   diff_dir('_site', 'pull-git/site')
 end
 
@@ -101,7 +101,7 @@ def test_remote_rsync
   #
   Octopress::Deploy.init_config(method: 'rsync', config_file: config, force: true, user: 'imathis@imathis.com', remote_path: '~/octopress-deploy/rsync/')
   Octopress::Deploy.push(config_file: config)
-  Octopress::Deploy.pull('pull-rsync', config_file: config)
+  Octopress::Deploy.pull(dir: 'pull-rsync', config_file: config)
   diff_dir('_site', 'pull-rsync')
 
 end
@@ -117,7 +117,7 @@ def test_local_rsync
   #
   Octopress::Deploy.init_config(method: 'rsync', config_file: config, force: true, remote_path: 'local-rsync')
   Octopress::Deploy.push(config_file: config)
-  Octopress::Deploy.pull('pull-rsync', config_file: config, user: false, remote_path: 'local-rsync')
+  Octopress::Deploy.pull(dir: 'pull-rsync', config_file: config, user: false, remote_path: 'local-rsync')
   diff_dir('_site', 'pull-rsync')
 end
 
@@ -126,7 +126,7 @@ def test_s3
   config = "_s3_deploy.yml"
   `rm -rf pull-s3`
   Octopress::Deploy.push(config_file: config)
-  Octopress::Deploy.pull('pull-s3', config_file: config)
+  Octopress::Deploy.pull(dir: 'pull-s3', config_file: config)
   diff_dir('_site', 'pull-s3')
 end
 

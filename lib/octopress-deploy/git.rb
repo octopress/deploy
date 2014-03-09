@@ -11,7 +11,7 @@ module Octopress
         @remote_path = @remote_path.sub(/^\//,'') #remove leading slash
         @site_dir    = File.expand_path(@options[:site_dir])  || '_site'
         @deploy_dir  = File.expand_path(@options[:deploy_dir] || '.deploy')
-        @pull_dir    = @options[:pull_dir]
+        @pull_dir    = @options[:dir]
         abort "Deploy Failed: Configure a git_url in #{@options[:config_file]} before deploying.".red if @repo.nil?
       end
 
