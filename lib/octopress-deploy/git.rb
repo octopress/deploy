@@ -50,7 +50,7 @@ git_url: #{options[:git_url]}
 # Branch defaults to master.
 # If using GitHub project pages, set the branch to 'gh-pages'.
 #
-# git_branch: #{options[:git_branch] || 'master'}
+git_branch: #{options[:git_branch] || 'master'}
 CONFIG
       end
 
