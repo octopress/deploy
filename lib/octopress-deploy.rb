@@ -1,7 +1,8 @@
 $LOAD_PATH.unshift File.expand_path("../", __FILE__)
-
+#
 require 'colorator'
 require 'yaml'
+require 'octopress'
 
 require 'octopress-deploy/version'
 require 'octopress-deploy/core_ext'
@@ -102,7 +103,7 @@ module Octopress
       puts "------------------"
       puts "#{config.yellow}"
       puts "------------------"
-      puts "Please add your configurations to this file."
+      puts "Modify these configurations as necessary."
     end
 
     def self.get_config
