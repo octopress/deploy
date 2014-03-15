@@ -1,5 +1,5 @@
 module Octopress
   module Deploy
-    VERSION = "1.0.0.alpha.4"
+    VERSION = "1.0.0.rc.1"
   end
 end

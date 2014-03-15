@@ -1,13 +1,11 @@
 $LOAD_PATH.unshift File.expand_path("../", __FILE__)
 
-require 'octopress-deploy/version'
-require 'octopress-deploy/core_ext'
 require 'colorator'
 require 'yaml'
 
-if defined? Octopress::Command
-  require 'octopress-deploy/commands'
-end
+require 'octopress-deploy/version'
+require 'octopress-deploy/core_ext'
+require 'octopress-deploy/commands'
 
 
 module Octopress
@@ -17,15 +15,15 @@ module Octopress
     autoload :S3,     'octopress-deploy/s3'
 
     METHODS = {
-      'git'=> Git,
-      'rsync'=> Rsync,
-      's3'=> S3
+      'git'   => Git,
+      'rsync' => Rsync,
+      's3'    => S3
     }
 
     def self.push(options={})
       init_options(options)
       if !File.exists? @options[:config_file]
-        abort "No deployment config found. Create one with: octopress deploy init #{@options[:config_file]}"
+        abort "File not found: #{@options[:config_file]}. Create a deployment config file with `octopress deploy init <METHOD>`."
       else
         parse_options
         deploy_method.new(@options).push()
@@ -45,6 +43,16 @@ module Octopress
       end
     end
 
+    def self.add_bucket(options={})
+      init_options(options)
+      if !File.exists? @options[:config_file]
+        abort "File not found: #{@options[:config_file]}. Create a deployment config file with `octopress deploy init <METHOD>`."
+      else
+        parse_options
+        deploy_method.new(@options).add_bucket()
+      end
+    end
+
     def self.parse_options
       config  = YAML.load(File.open(@options[:config_file])).to_symbol_keys
       @options = @options.to_symbol_keys
@@ -52,9 +60,9 @@ module Octopress
     end
 
     def self.init_options(options={})
-      @options = options.to_symbol_keys
+      @options                 = options.to_symbol_keys
       @options[:config_file] ||= '_deploy.yml'
-      @options[:site_dir] ||= site_dir
+      @options[:site_dir]    ||= site_dir
     end
 
     def self.deploy_method
@@ -75,7 +83,7 @@ module Octopress
 
       if !options[:method]
         puts options[:method]
-        raise "Please provide a deployment method.", METHODS.keys
+        abort "Please provide a deployment method.", METHODS.keys
       end
 
       init_options(options)

@@ -1,16 +1,17 @@
 require 'find'
 require 'fileutils'
-begin
-  require 'aws-sdk'
-rescue LoadError
-  abort "Please install the aws-sdk gem first."
-end
 
 module Octopress
   module Deploy
     class S3
 
       def initialize(options)
+        begin
+          require 'aws-sdk'
+        rescue LoadError
+          abort "Please install the aws-sdk gem first."
+        end
+        @options     = options
         @local       = options[:site_dir]
         @bucket_name = options[:bucket_name]
         @access_key  = options[:access_key_id]     || ENV['AWS_ACCESS_KEY_ID']
@@ -25,35 +26,43 @@ module Octopress
       end
 
       def push
-        abort "Seriously, you should. Quitting..." unless Deploy.check_gitignore
-        puts "Syncing #{@local} files to #{@bucket_name} on S3."
-        write_files
-        delete_files if delete_files?
-        status_message
+        #abort "Seriously, you should. Quitting..." unless Deploy.check_gitignore
+        @bucket = @s3.buckets[@bucket_name]
+        if !@bucket.exists?
+          abort "Bucket not found: '#{@bucket_name}'. Check your configuration or create a bucket using: `octopress deploy add_bucket`"
+        else
+          puts "Syncing #{@local} files to #{@bucket_name} on S3."
+          write_files
+          delete_files if delete_files?
+          status_message
+        end
       end
 
       def pull
-        puts "Syncing #{@bucket_name} files to #{@pull_dir} on S3."
-        @bucket.objects.each do |object|
-          path = File.join(@pull_dir, object.key)
-          dir = File.dirname(path)
-          FileUtils.mkdir_p(dir) unless Dir.exist?(dir)
-          File.open(path, 'w') { |f| f.write(object.read) }
+        @bucket = @s3.buckets[@bucket_name]
+        if !@bucket.exists?
+          abort "Bucket not found: '#{@bucket_name}'. Check your configuration or create a bucket using: `octopress deploy add_bucket`"
+        else
+          puts "Syncing #{@bucket_name} files to #{@pull_dir} on S3."
+          @bucket.objects.each do |object|
+            path = File.join(@pull_dir, object.key)
+            dir = File.dirname(path)
+            FileUtils.mkdir_p(dir) unless Dir.exist?(dir)
+            File.open(path, 'w') { |f| f.write(object.read) }
+          end
         end
       end
 
       # Connect to S3 using the AWS SDK
       # Retuns an aws bucket
+      #
       def connect
         AWS.config(access_key_id: @access_key, secret_access_key: @secret_key, region: @region)
-        s3 = AWS.s3
-        @bucket = s3.buckets[@bucket_name]
-        unless @bucket.exists? || create_bucket(s3.buckets)
-          abort "No bucket created. Change your config to point to an existing bucket."
-        end
+        @s3 = AWS.s3
       end
 
       # Write site files to the selected bucket
+      #
       def write_files
         puts "Writing #{pluralize('file', site_files.size)}:" if @verbose
         site_files.each do |file| 
@@ -68,6 +77,7 @@ module Octopress
       end
 
       # Delete files from the bucket, to ensure a 1:1 match with site files
+      #
       def delete_files
         if deletable_files.size > 0
           puts "Deleting #{pluralize('file', deletable_files.size)}:" if @verbose
@@ -82,30 +92,24 @@ module Octopress
         end
       end
 
-      def create_bucket(buckets)
-
-        if Deploy.ask_bool("S3 bucket '#{@bucket_name}' not found. Create one in region #{@region}?")
-          @bucket = buckets.create(@bucket_name)
-          puts "Created new bucket #{@bucket_name} in region #{@region}."
-
-          configure_bucket
-          true
-        end
+      # Create a new S3 bucket
+      #
+      def add_bucket
+        puts @bucket_name
+        @bucket = @s3.buckets.create(@bucket_name)
+        puts "Created new bucket '#{@bucket_name}' in region '#{@region}'."
+        configure_bucket
       end
 
       def configure_bucket
-        error_page = remote_path('404.html')
-        index_page = remote_path('index.html')
+        error_page = @options['error_page'] || remote_path('404.html')
+        index_page = @options['index_page'] || remote_path('index.html')
 
-        if Deploy.ask_bool("Bucket is not currently configured as a static websites. Configure it with index_page: #{index_page} and error_page: #{error_page}?")
-          config = @bucket.configure_website do |cfg|
-            cfg.index_document_suffix = index_page
-            cfg.error_document_key = error_page
-          end
-          puts "Bucket configured with index_document: #{index_page} and error_document: #{error_page}."
-        else
-          puts "You'll want to configure your new bucket using the AWS management console."
+        config = @bucket.configure_website do |cfg|
+          cfg.index_document_suffix = index_page
+          cfg.error_document_key = error_page
         end
+        puts "Bucket configured with index_document: #{index_page} and error_document: #{error_page}."
       end
 
       def delete_files?

@@ -2,13 +2,13 @@
 
 Deployment tools for Octopress and Jekyll blogs (or really any static site).
 
-Currently this supports deploying through S3, Git and Rsync. Requests for other
-deployment methods are welcome.
+Currently this supports deploying through S3, Git and Rsync. Pull request to support other deployment methods are welcome.
 
 ## Installation
 
 Add this line to your application's Gemfile:
 
+    gem 'octopress'
     gem 'octopress-deploy'
 
 And then execute:
@@ -17,90 +17,122 @@ And then execute:
 
 Or install it yourself as:
 
+    $ gem install octopress
     $ gem install octopress-deploy
 
 ## Set up
 
-To deploy your site run:
+First set up a configuration file for your deployment method.
 
-```bash
+```sh
+$ octopress deploy init git  # or rsync, s3
+```
+
+This will generate a `_deploy.yml` file in your current
+directory which you can edit to add any necessary configuration.
+**Remember to add your configuration to `.gitignore` to be sure
+you never commit sensitive information to your repository.**
+
+## Deploying
+
+Deployment is tailored to work with Jekyll, but it will work for
+any static site. Simply make sure your configuration points to
+the root directory of your static site (For Jekyll, that's
+probably `_site`) then tell Octopress to deploy it.
+
+```sh
 $ octopress deploy
 ```
 
-This will read from your configuration file `_deploy.yml` and deploy your site. If your site has no configuration file, you will be asked if you want to generate one and what deployment method you want to use.
+This will read your `_deploy.yml` configuration and deploy your
+site. If you like, you can specify a configuration file.
 
-You can also generate a `./_deploy.yml` configuration file by running:
-
-```bash
-$ octopress deploy init git # or 'rsync' or 's3'
+```sh
+$ octopress deploy --config _staging.yml
 ```
 
-Once you've deployed your site, you can also pull it back down into a local directory. This is mostly useful for checking the results of a deploy. This will create the directory if it doesn't already exist.
+## Pull down your site
 
-```ruby
-Octopress::Deploy.pull('some_directory')
+With the `pull` command, you can pull your site down into a local directory.
+
+```sh
+octopress deploy pull <DIRECTORY>
 ```
 
-### Configuration options
+Mainly you'd do this if you're troubleshooting deployment and you want to see if it's working how you expected.
 
-Configurations should be added to a `_deploy.yml` file in your project's root directory. You can pass options as a hash directy to the `push` method as well. Passed options will override options set in the config file.
+## Amazon S3 Deployment Configuration
 
-| Config        | Description                                      | Default
-|:--------------|:-------------------------------------------------|:---------------|
-| `config_file` | Path to the config file.                         | _config.yml    |
-| `site_dir`    | Path to comipled site files.                     | _site          |
+To deploy with Amazon S3 you will need to install the [aws-sdk gem](https://rubygems.org/gems/aws-sdk).
 
+Important: when using S3, you must add your `_deploy.yml` to your .gitignore to prevent accidentally sharing
+account access information.
 
-#### Amazon S3
-
-Important: when using S3, you must add your _deploy.yml to your .gitignore to prevent accidentally sharing
-account access information. Octopress Deploy will offer to do it for you. If you don't, you won't be able to deploy.`
-
-| Config              | Description                              | Default
-|:--------------------|:-----------------------------------------|:-------------|
-| `bucket_name`       | S3 bucket name                           |              |
-| `access_key_id`     | AWS access key                           |              |
-| `secret_access_key` | AWS secret key                           |              |
-| `remote_path`       | Directory files should be synced to.     | /            |
-| `delete`            | Delete files to create a 1:1 file sync.  | false        |
-| `verbose`           | Display all file actions during deploy.  | true         |
-| `region`            | Region for your AWS bucket               | us-east-1    |
+| Config              | Description                                           | Default
+|:--------------------|:------------------------------------------------------|:-------------|
+| `site_dir`          | Path to static site files.                            | _site        |
+| `bucket_name`       | S3 bucket name                                        |              |
+| `access_key_id`     | AWS access key                                        |              |
+| `secret_access_key` | AWS secret key                                        |              |
+| `remote_path`       | Directory files should be synced to.                  | /            |
+| `verbose`           | [optional] Display all file actions during deploy.    | true         |
+| `region`            | [optional] Region for your AWS bucket                 | us-east-1    |
+| `delete`            | Delete files in `remote_path` not found in `site_dir` | false        |
 
 If you choose a bucket which doesn't yet exist, Octopress Deploy will offer to create it for you, and offer to configure it as a static website.
 
-##### ENV config
+If you configure Octopress to delete files, all files found in the `remote_path` on S3 bucket will be removed unless they match local site files.
+If `remote_path` is a subdirectory, only files in that subdirectory will be evaluated for deletion.
 
-For the following configurations you can set environment vars instead of adding items to your config file.
+### AWS config via ENV
+
+If you prefer, you can store AWS access credentials in environment variables instead of a conifiguration file. 
 
 | Config              | ENV var                        |
 |:--------------------|:-------------------------------|
 | `access_key_id`     | AWS_ACCESS_KEY_ID              |
 | `secret_access_key` | AWS_SECRET_ACCESS_KEY          |
-| `region`            | AWS_DEFAULT_REGIONS            |
 
+Note: configurations in `_deploy.yml` will override environment variables so be sure to remove those if you decide to use environment variables.
 
-##### Deleting files from S3
+### Add a new bucket
 
-If the `delete` option is true, files in the `remote_path` on the bucket will be removed if they do not match local site files.
-If `remote_path` is a subdirectory, only files in that subdirectory will be evaluated for deletion.
+If your AWS credentials are properly configured, you can add a new bucket with this command.
 
-#### Git
+```sh
+octopress deploy add_bucket
+```
+
+This will connect to AWS, create a new S3 bucket, and configure it for static website hosting. This command can use the settings in your deployment configuration or you can pass options to override those settings.
+
+| Option        | Description                                      | Default
+|:--------------|:-------------------------------------------------|:---------------|
+| `site_dir`    | Path to static site files.                       | _site          |
+| `--name`      | Override the `bucket_name` configuration         |                |
+| `--region`    | Override the `region` configuration              |                |
+| `--index`     | Specify an index page for your site              | index.html     |
+| `--error`     | Specify an error page for your site              | error.html     |
+| `--config`    | Use a custom configuration file                  | _config.yml    |
+
+You'll only need to pass options if you want to override settings in your deploy config file.
+
+## Git Deployment Configuration
 
 Only `git_url` is required. Other options will default as shown below.
 
 | Config        | Description                                      | Default
 |:--------------|:-------------------------------------------------|:---------------|
+| `site_dir`    | Path to static site files.                       | _site          |
 | `git_url`     | Url for remote git repository.                   |                |
 | `git_branch`  | Deployment branch for git repository.            | master         |
 | `deploy_dir`  | Directory where deployment files are staged.     | .deploy        |
 | `remote`      | Name of git remote.                              | deploy         |
 
-#### Rsync
-
-Only `remote_path` is required. If `user` is not present, Rsync will sync between two locally available directories. Do this if your site root is mounted locally.
+## Rsync Deployment Configuration
 
 | Config         | Description                                       | Default
 |:---------------|:--------------------------------------------------|:---------------|
+| `site_dir`     | Path to static site files.                        | _site          |
 | `user`         | ssh user, e.g user@host.com                       |                |
 | `port`         | ssh port                                          | 22             |
 | `remote_path`  | Remote destination's document root.               |                |
@@ -108,6 +140,8 @@ Only `remote_path` is required. If `user` is not present, Rsync will sync betwee
 | `exclude`      | Inline list of rsync exclusions.                  |                |
 | `include`      | Inline list of inclusions to override exclusions. |                |
 | `delete`       | Delete files in destination not found in source   | false          |
+
+You can rsync to a local directory by configuring `remote_path` and leaving off `user` and `port`.
 
 ## Contributing
 
