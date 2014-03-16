@@ -34,7 +34,7 @@ module Octopress
           end
 
           c.command(:add_bucket) do |c|
-            c.syntax 'add-bucket [options]'
+            c.syntax 'add_bucket [options]'
             c.description "Add a new S3 bucket and configure it for static websites."
             c.option 'bucket_name','--name NAME','Choose a bucket name. (Defaults: to bucket_name in config file)'
             c.option 'region','--region REGION','Choose a region. (Defaults: to region in config file)'

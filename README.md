@@ -70,7 +70,8 @@ account access information.
 
 | Config              | Description                                           | Default
 |:--------------------|:------------------------------------------------------|:-------------|
-| `site_dir`          | Path to static site files.                            | _site        |
+| `method`            | Deployment method, in this case use 's3'              |              |
+| `site_dir`          | Path to static site files                             | _site        |
 | `bucket_name`       | S3 bucket name                                        |              |
 | `access_key_id`     | AWS access key                                        |              |
 | `secret_access_key` | AWS secret key                                        |              |
@@ -107,12 +108,11 @@ This will connect to AWS, create a new S3 bucket, and configure it for static we
 
 | Option        | Description                                      | Default
 |:--------------|:-------------------------------------------------|:---------------|
-| `site_dir`    | Path to static site files.                       | _site          |
 | `--name`      | Override the `bucket_name` configuration         |                |
 | `--region`    | Override the `region` configuration              |                |
 | `--index`     | Specify an index page for your site              | index.html     |
 | `--error`     | Specify an error page for your site              | error.html     |
-| `--config`    | Use a custom configuration file                  | _config.yml    |
+| `--config`    | Use a custom configuration file                  | _deploy.yml    |
 
 You'll only need to pass options if you want to override settings in your deploy config file.
 
@@ -122,23 +122,25 @@ Only `git_url` is required. Other options will default as shown below.
 
 | Config        | Description                                      | Default
 |:--------------|:-------------------------------------------------|:---------------|
-| `site_dir`    | Path to static site files.                       | _site          |
-| `git_url`     | Url for remote git repository.                   |                |
-| `git_branch`  | Deployment branch for git repository.            | master         |
-| `deploy_dir`  | Directory where deployment files are staged.     | .deploy        |
-| `remote`      | Name of git remote.                              | deploy         |
+| `method`      | Deployment method, in this case use 'git'        |                |
+| `site_dir`    | Path to static site files                        | _site          |
+| `git_url`     | Url for remote git repository                    |                |
+| `git_branch`  | Deployment branch for git repository             | master         |
+| `deploy_dir`  | Directory where deployment files are staged      | .deploy        |
+| `remote`      | Name of git remote                               | deploy         |
 
 ## Rsync Deployment Configuration
 
 | Config         | Description                                       | Default
 |:---------------|:--------------------------------------------------|:---------------|
-| `site_dir`     | Path to static site files.                        | _site          |
+| `method`       | Deployment method, in this case use 'rsync'       |                |
+| `site_dir`     | Path to static site files                         | _site          |
 | `user`         | ssh user, e.g user@host.com                       |                |
 | `port`         | ssh port                                          | 22             |
-| `remote_path`  | Remote destination's document root.               |                |
-| `exclude_file` | Path to a file containing rsync exclusions.       |                |
-| `exclude`      | Inline list of rsync exclusions.                  |                |
-| `include`      | Inline list of inclusions to override exclusions. |                |
+| `remote_path`  | Remote destination's document root                |                |
+| `exclude_file` | Path to a file containing rsync exclusions        |                |
+| `exclude`      | Inline list of rsync exclusions                   |                |
+| `include`      | Inline list of inclusions to override exclusions  |                |
 | `delete`       | Delete files in destination not found in source   | false          |
 
 You can rsync to a local directory by configuring `remote_path` and leaving off `user` and `port`.
