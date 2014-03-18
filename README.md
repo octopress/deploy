@@ -8,7 +8,6 @@ Currently this supports deploying through S3, Git and Rsync. Pull request to sup
 
 Add this line to your application's Gemfile:
 
-    gem 'octopress'
     gem 'octopress-deploy'
 
 And then execute:
@@ -17,7 +16,6 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install octopress
     $ gem install octopress-deploy
 
 ## Set up
