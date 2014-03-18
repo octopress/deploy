@@ -81,10 +81,10 @@ module Octopress
     # Create a config file
     #
     def self.init_config(options={})
+      options = options.to_symbol_keys
 
       if !options[:method]
-        puts options[:method]
-        abort "Please provide a deployment method.", METHODS.keys
+        abort "Please provide a deployment method. e.g. #{METHODS.keys}"
       end
 
       init_options(options)
@@ -108,8 +108,9 @@ module Octopress
 
     def self.get_config
       <<-FILE
-method: #{@options[:method]}
-site_dir: #{@options[:site_dir]}
+#{"method: #{@options[:method]}".ljust(40)}  # How do you want to deploy? git, rsync or s3.
+#{"site_dir: #{@options[:site_dir]}".ljust(40)}  # Location of your your static site files.
+
 #{deploy_method.default_config(@options)}
 FILE
     end
