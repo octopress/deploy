@@ -4,13 +4,13 @@ Deployment tools for Octopress and Jekyll blogs (or really any static site).
 
 Currently this supports deploying through S3, Git and Rsync. Pull request to support other deployment methods are welcome.
 
-[![Gem Version](https://badge.fury.io/rb/octopress-deploy.png)](http://badge.fury.io/rb/octopress-deploy)
+<!--[![Gem Version](https://badge.fury.io/rb/octopress-deploy.png)](http://badge.fury.io/rb/octopress-deploy)-->
 
 ## Installation
 
 Add this line to your application's Gemfile:
 
-    gem 'octopress-deploy', '~> 1.0.0.rc.1'
+    gem 'octopress-deploy', '~> 1.0.0.rc.2'
 
 And then execute:
 
