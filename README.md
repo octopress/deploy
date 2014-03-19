@@ -101,7 +101,7 @@ Note: configurations in `_deploy.yml` will override environment variables so be 
 If your AWS credentials are properly configured, you can add a new bucket with this command.
 
 ```sh
-octopress deploy add_bucket
+octopress deploy add-bucket
 ```
 
 This will connect to AWS, create a new S3 bucket, and configure it for static website hosting. This command can use the settings in your deployment configuration or you can pass options to override those settings.
