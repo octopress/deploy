@@ -16,7 +16,6 @@ module Octopress
         @exclude_file = @options[:include_file]
         @exclude_file = File.expand_path(@include_file) if @include_file
         @delete       = @options[:delete] || false
-        @remote_path  = @remote_path.sub(/^\//,'') #remove leading slash
         @pull_dir     = @options[:dir]
       end
 
