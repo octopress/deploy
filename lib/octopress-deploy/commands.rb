@@ -12,8 +12,8 @@ module Octopress
           end
 
           c.command(:pull) do |c|
-            c.syntax "pull <DIRECTORY>"
-            c.description "Pull down the published copy of your site into a directory (default: ./site-pull)"
+            c.syntax "pull <DIR>"
+            c.description "Pull down the published copy of your site into DIR"
             c.option "config_file", "--config FILE", "The path to your config file (default: _deploy.yml)"
 
             c.action do |args, options|

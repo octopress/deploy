@@ -56,7 +56,7 @@ $ octopress deploy --config _staging.yml
 With the `pull` command, you can pull your site down into a local directory.
 
 ```sh
-octopress deploy pull <DIRECTORY>
+octopress deploy pull <DIR>
 ```
 
 Mainly you'd do this if you're troubleshooting deployment and you want to see if it's working how you expected.
