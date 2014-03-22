@@ -1,6 +1,6 @@
 # Octopress Deploy Changelog
 
-## Current released version
+## Released version
 
 ### 1.0.0 RC3 - 2014-03-22
 
@@ -9,6 +9,8 @@
   longer try to set file permissions or preserve owner and
   group name on remote. Issue: #19
 - Added `flags` config for rsync allows customization of flags.
+- Added support for octopress-ink documentation system.
+- Added a `update_docs` Rake task to update docs/index.markdown from README.md.
 
 #### Bug Fixes
 - No longer stripping forward slashes on remote_path. Issue #18
