@@ -4,7 +4,7 @@ module Octopress
 
       def initialize(options)
         @options      = options
-        @flags        = @options[:flags] ||= ' -rltDvz'
+        @flags        = @options[:flags] || ' -rltDvz'
         @user         = @options[:user]
         @port         = @options[:port]
         @local        = @options[:site_dir]
@@ -61,7 +61,7 @@ module Octopress
 #{"remote_path: #{options[:remote_path]}".ljust(40)}  # Destination directory
 #{"delete: #{options[:delete]}".ljust(40)}  # Remove files from destination which don't match files in source
 
-#{"# flags: #{options[:flags]}".ljust(40)}  # Modify flags as necessary to suit your hosting setup
+#{"# flags: #{options[:flags] || '-rltDvz'}".ljust(40)}  # Modify flags as necessary to suit your hosting setup
 #{"# port: #{options[:port]}".ljust(40)}  # If your host requires a non standard port
 #{"# exclude: ".ljust(40)}  # Path to file containing list of files to exclude
 #{"# exclude-file: ".ljust(40)}  # Path to file containing list of files to exclude
