@@ -1,6 +1,6 @@
 require "bundler/gem_tasks"
 
-doc_file = 'docs/index.markdown'
+doc_file = 'assets/docs/index.markdown'
 
 desc "Copy README.md contents into #{doc_file}"
 task :update_docs do
