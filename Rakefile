@@ -1,19 +1,8 @@
 require "bundler/gem_tasks"
+require "octopress-ink"
 
-doc_file = 'assets/docs/index.markdown'
-
-desc "Copy README.md contents into #{doc_file}"
+desc "Copy Readme and Changelog into docs"
 task :update_docs do
-  contents = File.open('README.md').read
-  contents.sub!(/^# (.*)$/, "#{title('\1').strip}")
-  File.open(doc_file, 'w') {|f| f.write(contents) }
-  puts "Updated #{doc_file} from README.md"
-end
-
-def title(input)
-  <<-YAML
----
-title: "#{input.strip}"
----  
-YAML
+  Octopress::Ink.copy_doc 'README.md', 'assets/docs/index.markdown'
+  Octopress::Ink.copy_doc 'CHANGELOG.md', 'assets/docs/changelog/index.markdown'
 end

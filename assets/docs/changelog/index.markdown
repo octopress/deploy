@@ -1,4 +1,6 @@
-# Octopress Deploy Changelog
+---
+title: "Octopress Deploy Changelog"
+---
 
 ## Current version
 
