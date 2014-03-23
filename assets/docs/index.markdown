@@ -1,4 +1,6 @@
-# Octopress Deploy
+---
+title: "Octopress Deploy"
+---
 
 Currently this gem supports deploying static sites using S3, Git and Rsync. Pull request to support other deployment methods are welcome.
 

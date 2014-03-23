@@ -8,7 +8,6 @@ require 'octopress-deploy/version'
 require 'octopress-deploy/core_ext'
 require 'octopress-deploy/commands'
 
-
 module Octopress
   module Deploy
     autoload :Git,    'octopress-deploy/git'
@@ -130,5 +129,17 @@ FILE
         true
       end
     end
+
+    def self.gem_dir(*subdirs)
+      File.expand_path(File.join(File.dirname(__FILE__), '../', *subdirs))
+    end
+
   end
+end
+
+begin
+  require 'octopress-ink'
+  require 'octopress-deploy/docs'
+  Octopress::Ink.register_plugin(Octopress::Deploy::DeployDocs)
+rescue LoadError
 end
