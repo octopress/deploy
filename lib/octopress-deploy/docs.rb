@@ -14,6 +14,14 @@ module Octopress
       def docs_base_path
         'docs/deploy'
       end
+
+      def info(options)
+        if options['docs']
+          super
+        else
+          ''
+        end
+      end
     end
   end
 end

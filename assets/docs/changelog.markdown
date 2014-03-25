@@ -1,5 +1,6 @@
 ---
 title: "Octopress Deploy Changelog"
+permalink: /changelog/
 ---
 
 ## Current version
