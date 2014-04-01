@@ -8,7 +8,7 @@
 
 ## Past versions
 
-### 1.0.0 RC4 - 2014-03-22
+### 1.0.0 RC4 - 2014-03-25
 
 - Added: Octopress Ink documentation site support
 
