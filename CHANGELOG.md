@@ -2,6 +2,16 @@
 
 ## Current version
 
+### 1.0.0 RC5 - 2014-04-01
+
+- Fixed: `site_dir` config didn't work.
+
+## Past versions
+
+### 1.0.0 RC4 - 2014-03-22
+
+- Added: Octopress Ink documentation site support
+
 ### 1.0.0 RC3 - 2014-03-22
 
 #### Minor Enhancements
@@ -16,7 +26,6 @@
 - No longer stripping forward slashes on remote_path. Issue #18
 - `pull` command no longer promises a default directory.
 
-## Past versions
 
 ### 1.0.0 RC2 - 2014-03-18
 - CHANGE: `add_bucket` command becomes `add-bucket` 

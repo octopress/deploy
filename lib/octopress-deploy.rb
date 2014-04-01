@@ -71,7 +71,7 @@ module Octopress
 
     def self.site_dir
       @options[:site_dir] || if File.exist? '_config.yml'
-        YAML.load(File.open('_config.yml'))['destination'] || '_site'
+        YAML.load(File.open('_config.yml'))['site_dir'] || '_site'
       else
         '_site'
       end
