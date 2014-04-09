@@ -20,6 +20,7 @@ module Octopress
         @remote_path = (options[:remote_path]      || '/').sub(/^\//,'')
         @verbose     = options[:verbose]           || true
         @delete      = options[:delete]
+        @headers     = options[:headers]           || []
         @remote_path = @remote_path.sub(/^\//,'')  # remove leading slash
         @pull_dir    = options[:dir]
         connect
@@ -65,9 +66,35 @@ module Octopress
       #
       def write_files
         puts "Writing #{pluralize('file', site_files.size)}:" if @verbose
-        site_files.each do |file| 
-          o = @bucket.objects[remote_path(file)]
-          o.write(file: file)
+        site_files.each do |file|
+          s3_filename = remote_path(file)
+          o = @bucket.objects[s3_filename]
+          file_with_options = {:file => file}
+
+          @headers.each do |conf|
+            if conf.has_key? 'filename'
+              if s3_filename.match(conf['filename'])
+                if @verbose
+                  puts "File matched pattern #{conf['filename']}"
+                end
+
+                if (conf.has_key? 'expires')
+                  file_with_options[:expires] = conf['expires']
+                end
+                if (conf.has_key? 'content_type')
+                  file_with_options[:content_type] = conf['content_type']
+                end
+                if (conf.has_key? 'cache_control')
+                  file_with_options[:cache_control] = conf['cache_control']
+                end
+                if (conf.has_key? 'content_encoding')
+                  file_with_options[:content_encoding] = conf['content_encoding']
+                end
+              end
+            end
+          end
+
+          o.write(file_with_options)
           if @verbose
             puts "+ #{remote_path(file)}"
           else
@@ -183,4 +210,3 @@ CONFIG
     end
   end
 end
-
