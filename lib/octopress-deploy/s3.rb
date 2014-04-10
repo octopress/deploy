@@ -72,24 +72,28 @@ module Octopress
           file_with_options = {:file => file}
 
           @headers.each do |conf|
-            if conf.has_key? 'filename'
-              if s3_filename.match(conf['filename'])
-                if @verbose
-                  puts "File matched pattern #{conf['filename']}"
+            if conf.has_key? 'filename' and s3_filename.match(conf['filename'])
+              if @verbose
+                puts "+ #{remote_path(file)} matched pattern #{conf['filename']}"
+              end
+
+              if conf.has_key? 'expires'
+                expireDate = conf['expires']
+                relative_year = /^\+(\d+) year(s)?$/.match(conf['expires'])
+                if relative_year
+                  expireDate = (Time.now + (60*60*24*365*relative_year[1].to_i)).httpdate
                 end
 
-                if (conf.has_key? 'expires')
-                  file_with_options[:expires] = conf['expires']
-                end
-                if (conf.has_key? 'content_type')
-                  file_with_options[:content_type] = conf['content_type']
-                end
-                if (conf.has_key? 'cache_control')
-                  file_with_options[:cache_control] = conf['cache_control']
-                end
-                if (conf.has_key? 'content_encoding')
-                  file_with_options[:content_encoding] = conf['content_encoding']
-                end
+                file_with_options[:expires] = expireDate
+              end
+              if conf.has_key? 'content_type'
+                file_with_options[:content_type] = conf['content_type']
+              end
+              if conf.has_key? 'cache_control'
+                file_with_options[:cache_control] = conf['cache_control']
+              end
+              if conf.has_key? 'content_encoding'
+                file_with_options[:content_encoding] = conf['content_encoding']
               end
             end
           end
