@@ -2,11 +2,16 @@
 
 ## Current version
 
+### 1.0.0 RC6 - 2014-04-17
+
+- Fixed: CLI options now override config file settings.
+
+## Past versions
+
 ### 1.0.0 RC5 - 2014-04-01
 
 - Fixed: `site_dir` config didn't work.
 
-## Past versions
 
 ### 1.0.0 RC4 - 2014-03-25
 

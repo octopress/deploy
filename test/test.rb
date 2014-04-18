@@ -6,13 +6,13 @@ require 'find'
 @failures = {}
 
 def setup_tests
-  `rm -rf _site` # clean up from previous tests
+  `rm -rf build` # clean up from previous tests
   generate_site
 end
 
 def generate_site
-  system "cp -r source/ _site"
-  Find.find('_site').to_a.each do |f| 
+  system "cp -r source/ build"
+  Find.find('build').to_a.each do |f| 
     system("echo '#{garbage}' >> #{f}") unless File.directory?(f)
   end
 end
@@ -67,10 +67,10 @@ def test_remote_git
   
   # Test remote git deployment
   #
-  Octopress::Deploy.init_config(method: 'git', config_file: config, force: true, git_branch: 'test_git_deploy', git_url: repo)
+  Octopress::Deploy.init_config(method: 'git', config_file: config, force: true, site_dir: 'build', git_branch: 'test_git_deploy', git_url: repo)
   Octopress::Deploy.push(config_file: config)
   Octopress::Deploy.pull(dir: 'pull-git', config_file: config)
-  diff_dir('_site', 'pull-git')
+  diff_dir('build', 'pull-git')
 end
 
 def test_local_git
@@ -85,9 +85,10 @@ def test_local_git
 
   # Test local git deployment
   #
-  Octopress::Deploy.push(config_file: config, git_url: File.expand_path(repo), remote_path: 'site')
+  Octopress::Deploy.init_config(method: 'git', config_file: config, force: true, site_dir: 'build', git_branch: 'test_git_deploy', git_url: File.expand_path(repo), remote_path: 'site')
+  Octopress::Deploy.push(config_file: config)
   Octopress::Deploy.pull(dir: 'pull-git', config_file: config, git_url: File.expand_path(repo), remote_path: 'site')
-  diff_dir('_site', 'pull-git/site')
+  diff_dir('build', 'pull-git/site')
 end
 
 def test_remote_rsync
@@ -99,10 +100,10 @@ def test_remote_rsync
   
   # Test remote git deployment
   #
-  Octopress::Deploy.init_config(method: 'rsync', config_file: config, force: true, user: 'imathis@imathis.com', remote_path: '~/octopress-deploy/rsync/')
+  Octopress::Deploy.init_config(method: 'rsync', config_file: config, site_dir: 'build', force: true, user: 'imathis@imathis.com', remote_path: '~/octopress-deploy/rsync/')
   Octopress::Deploy.push(config_file: config)
   Octopress::Deploy.pull(dir: 'pull-rsync', config_file: config)
-  diff_dir('_site', 'pull-rsync')
+  diff_dir('build', 'pull-rsync')
 
 end
 
@@ -115,10 +116,10 @@ def test_local_rsync
 
   # Test local git deployment
   #
-  Octopress::Deploy.init_config(method: 'rsync', config_file: config, force: true, remote_path: 'local-rsync')
+  Octopress::Deploy.init_config(method: 'rsync', config_file: config, site_dir: 'build', force: true, remote_path: 'local-rsync')
   Octopress::Deploy.push(config_file: config)
   Octopress::Deploy.pull(dir: 'pull-rsync', config_file: config, user: false, remote_path: 'local-rsync')
-  diff_dir('_site', 'pull-rsync')
+  diff_dir('build', 'pull-rsync')
 end
 
 def test_s3
@@ -127,7 +128,7 @@ def test_s3
   `rm -rf pull-s3`
   Octopress::Deploy.push(config_file: config)
   Octopress::Deploy.pull(dir: 'pull-s3', config_file: config)
-  diff_dir('_site', 'pull-s3')
+  diff_dir('build', 'pull-s3')
 end
 
 def print_test_results

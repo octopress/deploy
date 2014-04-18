@@ -43,16 +43,18 @@ module Octopress
       end
 
       def self.default_config(options={})
-        <<-CONFIG
+        config = <<-CONFIG
 #{"git_url: #{options[:git_url]}".ljust(40)}  # remote repository url, e.g. git@github.com:username/repo_name
-#{"git_branch: #{options[:git_branch] || 'master'}".ljust(40)}  # Git branch where static site files are commited
 
 # Note on git_branch:
 # If using GitHub project pages, set the branch to 'gh-pages'.
 # For GitHub user/organization pages or Heroku, set the branch to 'master'.
+#
+#{"git_branch: #{options[:git_branch] || 'master'}".ljust(40)}  # Git branch where static site files are commited
 
-#{"# remote_path: #{options[:remote_path]}".ljust(40)}  # Destination directory
 CONFIG
+        config << "\n# " unless options[:remote_path]
+        config << "#{"remote_path: #{options[:remote_path]}".ljust(38)}  # Destination directory"
       end
 
       # If necessary create deploy directory and initialize it with deployment remote.

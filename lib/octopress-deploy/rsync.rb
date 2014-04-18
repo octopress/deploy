@@ -4,7 +4,7 @@ module Octopress
 
       def initialize(options)
         @options      = options
-        @flags        = @options[:flags] || ' -rltDvz'
+        @flags        = @options[:flags] || ' -avz'
         @user         = @options[:user]
         @port         = @options[:port]
         @local        = @options[:site_dir]
@@ -41,7 +41,7 @@ module Octopress
         cmd    << " --include-from #{@include_file}"  if @include_file
         cmd    << " --include #{@include}"            if @include
         cmd    << " --rsh='ssh -p#{@port}'"           if @user && @port
-        cmd    << " --delete"                         if @delete
+        cmd    << " --delete "                        if @delete
 
         local  << " #{File.join(@local, '')} "
         remote << " #{@user}:"                         if @user

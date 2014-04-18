@@ -1,5 +1,5 @@
 method: rsync
-site_dir: _site
+site_dir: build
 user: 
 port: 
 remote_path: local-rsync

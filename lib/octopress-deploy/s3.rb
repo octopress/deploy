@@ -9,7 +9,7 @@ module Octopress
         begin
           require 'aws-sdk'
         rescue LoadError
-          abort "Please install the aws-sdk gem first."
+          abort "Deploying to S3 requires aws-sdk. Install with `gem install aws-sdk`."
         end
         @options     = options
         @local       = options[:site_dir]

@@ -23,6 +23,7 @@ _git_deploy.yml
 pull-git
 pull-rsync
 pull-s3
-_site
+build
 local-git
 local-rsync
+.DS_Store

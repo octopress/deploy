@@ -1,5 +1,7 @@
 $LOAD_PATH.unshift File.expand_path("../", __FILE__)
 #
+require 'pry-debugger'
+
 require 'colorator'
 require 'yaml'
 require 'octopress'
@@ -20,57 +22,61 @@ module Octopress
       's3'    => S3
     }
 
+    DEFAULT_OPTIONS = {
+      :config_file => '_deploy.yml',
+      :site_dir => '_site',
+    }
+
     def self.push(options={})
-      init_options(options)
-      if !File.exists? @options[:config_file]
-        abort "File not found: #{@options[:config_file]}. Create a deployment config file with `octopress deploy init <METHOD>`."
-      else
-        parse_options
-        deploy_method.new(@options).push()
-      end
+      options = merge_configs(options)
+      deployer(options).push
     end
 
     def self.pull(options={})
-      init_options(options)
-      if !File.exists? @options[:config_file]
-        abort "No deployment config found. Create one with: octopress deploy init #{@options[:config_file]}"
-      else
-        parse_options
-        if !File.exists? @options[:dir]
-          FileUtils.mkdir_p @options[:dir]
-        end
-        deploy_method.new(@options).pull()
+      options = merge_configs(options)
+
+      if !File.exists? options[:dir]
+        FileUtils.mkdir_p options[:dir]
       end
+
+      deployer(options).pull
     end
 
     def self.add_bucket(options={})
-      init_options(options)
-      if !File.exists? @options[:config_file]
-        abort "File not found: #{@options[:config_file]}. Create a deployment config file with `octopress deploy init <METHOD>`."
-      else
-        parse_options
-        deploy_method.new(@options).add_bucket()
+      options = merge_configs(options)
+      get_deployment_method(options).new().add_bucket()
+    end
+
+    def self.merge_configs(options={})
+      options = check_config(options)
+      config  = YAML.load(File.open(options[:config_file])).to_symbol_keys
+      options = config.deep_merge(options)
+    end
+
+    def self.check_config(options={})
+      options = options.to_symbol_keys
+      options[:config_file] ||= DEFAULT_OPTIONS[:config_file]
+
+      if !File.exists? options[:config_file]
+        abort "File not found: #{options[:config_file]}. Create a deployment config file with `octopress deploy init <METHOD>`."
       end
+
+      options
     end
 
-    def self.parse_options
-      config  = YAML.load(File.open(@options[:config_file])).to_symbol_keys
-      @options = @options.to_symbol_keys
-      @options = config.deep_merge(@options)
+    def self.deployer(options)
+      get_deployment_method(options).new(options)
     end
 
-    def self.init_options(options={})
-      @options                 = options.to_symbol_keys
-      @options[:config_file] ||= '_deploy.yml'
-      @options[:site_dir]    ||= site_dir
+    def self.get_deployment_method(options)
+      METHODS[options[:method].downcase]
     end
 
-    def self.deploy_method
-      METHODS[@options[:method].downcase]
-    end
 
     def self.site_dir
-      @options[:site_dir] || if File.exist? '_config.yml'
+      if options[:site_dir]
+        options[:site_dir]
+      elsif File.exist? '_config.yml'
         YAML.load(File.open('_config.yml'))['site_dir'] || '_site'
       else
         '_site'
@@ -86,7 +92,7 @@ module Octopress
         abort "Please provide a deployment method. e.g. #{METHODS.keys}"
       end
 
-      init_options(options)
+      @options = DEFAULT_OPTIONS.deep_merge(options)
       write_config
       check_gitignore
     end
@@ -110,7 +116,7 @@ module Octopress
 #{"method: #{@options[:method]}".ljust(40)}  # How do you want to deploy? git, rsync or s3.
 #{"site_dir: #{@options[:site_dir]}".ljust(40)}  # Location of your your static site files.
 
-#{deploy_method.default_config(@options)}
+#{get_deployment_method(@options).default_config(@options)}
 FILE
     end
 
