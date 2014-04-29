@@ -4,6 +4,7 @@ module Octopress
       def self.init_with_program(p)
         p.command(:deploy) do |c|
           c.syntax "deploy [options]"
+          c.version Deploy::VERSION
           c.description "Deploy your Octopress site."
           c.option "config_file", "--config FILE", "The path to your config file (default: _deploy.yml)"
 
