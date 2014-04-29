@@ -1,5 +1,12 @@
 # Octopress Deploy Changelog
 
+## Master - Unreleased
+
+###  1.0.0 RC7
+
+- Fixed: `--version` flag.
+- Fixed: Moved requiring `pry-debugger` to tests.
+
 ## Current version
 
 ### 1.0.0 RC6 - 2014-04-17

@@ -1,9 +1,5 @@
 $LOAD_PATH.unshift File.expand_path("../", __FILE__)
 #
-begin
-  require 'pry-debugger'
-rescue LoadError
-end
 
 require 'colorator'
 require 'yaml'

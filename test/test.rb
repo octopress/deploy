@@ -1,6 +1,7 @@
 require File.expand_path("../../lib/octopress-deploy.rb", __FILE__)
 require 'fileutils'
 require 'find'
+require 'pry-debugger'
 
 @has_failed = false
 @failures = {}
