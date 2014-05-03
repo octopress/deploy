@@ -3,7 +3,13 @@ title: "Octopress Deploy Changelog"
 permalink: /changelog/
 ---
 
+
 ## Current version
+
+###  1.0.0 RC7 - 2014-05-02
+
+- Fixed: `--version` flag.
+- Fixed: Moved requiring `pry-debugger` to tests.
 
 ### 1.0.0 RC6 - 2014-04-17
 
