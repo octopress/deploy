@@ -3,6 +3,10 @@
 
 ## Current version
 
+###  1.0.0 RC8 - 2014-05-08
+
+- Now using SafeYAML for loading configurations.
+
 ###  1.0.0 RC7 - 2014-05-02
 
 - Fixed: `--version` flag.

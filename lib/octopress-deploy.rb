@@ -4,6 +4,7 @@ $LOAD_PATH.unshift File.expand_path("../", __FILE__)
 require 'colorator'
 require 'yaml'
 require 'octopress'
+require 'safe_yaml/load'
 
 require 'octopress-deploy/version'
 require 'octopress-deploy/core_ext'
@@ -48,7 +49,7 @@ module Octopress
 
     def self.merge_configs(options={})
       options = check_config(options)
-      config  = YAML.load(File.open(options[:config_file])).to_symbol_keys
+      config  = SafeYAML.load(File.open(options[:config_file])).to_symbol_keys
       options = config.deep_merge(options)
     end
 
@@ -76,7 +77,7 @@ module Octopress
       if options[:site_dir]
         options[:site_dir]
       elsif File.exist? '_config.yml'
-        YAML.load(File.open('_config.yml'))['site_dir'] || '_site'
+        SafeYAML.load(File.open('_config.yml'))['site_dir'] || '_site'
       else
         '_site'
       end
