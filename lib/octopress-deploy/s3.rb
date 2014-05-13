@@ -69,34 +69,7 @@ module Octopress
         site_files.each do |file|
           s3_filename = remote_path(file)
           o = @bucket.objects[s3_filename]
-          file_with_options = {:file => file}
-
-          @headers.each do |conf|
-            if conf.has_key? 'filename' and s3_filename.match(conf['filename'])
-              if @verbose
-                puts "+ #{remote_path(file)} matched pattern #{conf['filename']}"
-              end
-
-              if conf.has_key? 'expires'
-                expireDate = conf['expires']
-                relative_year = /^\+(\d+) year(s)?$/.match(conf['expires'])
-                if relative_year
-                  expireDate = (Time.now + (60*60*24*365*relative_year[1].to_i)).httpdate
-                end
-
-                file_with_options[:expires] = expireDate
-              end
-              if conf.has_key? 'content_type'
-                file_with_options[:content_type] = conf['content_type']
-              end
-              if conf.has_key? 'cache_control'
-                file_with_options[:cache_control] = conf['cache_control']
-              end
-              if conf.has_key? 'content_encoding'
-                file_with_options[:content_encoding] = conf['content_encoding']
-              end
-            end
-          end
+          file_with_options = get_file_with_metadata(file, s3_filename);
 
           o.write(file_with_options)
           if @verbose
@@ -105,6 +78,48 @@ module Octopress
             progress('+')
           end
         end
+      end
+
+      def get_file_with_metadata(file, s3_filename)
+        file_with_options = {:file => file }
+
+        @headers.each do |conf|
+          if conf.has_key? 'filename' and s3_filename.match(conf['filename'])
+            if @verbose
+              puts "+ #{remote_path(file)} matched pattern #{conf['filename']}"
+            end
+
+            if conf.has_key? 'expires'
+              expireDate = conf['expires']
+
+              relative_years = /^\+(\d+) year(s)?$/.match(conf['expires'])
+              if relative_years
+                expireDate = (Time.now + (60 * 60 * 24 * 365 * relative_years[1].to_i)).httpdate
+              end
+
+              relative_days = /^\+(\d+) day(s)?$/.match(conf['expires'])
+              if relative_days
+                expireDate = (Time.now + (60 * 60 * 24 * relative_days[1].to_i)).httpdate
+              end
+
+              file_with_options[:expires] = expireDate
+            end
+
+            if conf.has_key? 'content_type'
+              file_with_options[:content_type] = conf['content_type']
+            end
+
+            if conf.has_key? 'cache_control'
+              file_with_options[:cache_control] = conf['cache_control']
+            end
+
+            if conf.has_key? 'content_encoding'
+              file_with_options[:content_encoding] = conf['content_encoding']
+            end
+          end
+        end
+
+        return file_with_options
       end
 
       # Delete files from the bucket, to ensure a 1:1 match with site files
