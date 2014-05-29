@@ -19,7 +19,7 @@ module Octopress
       #
       def push
         init_repo
-        puts "Syncing #{@site_dir.sub(`pwd`.strip+'/', '')} files to #{@repo}."
+        puts "Syncing #{@site_dir.sub(Dir.pwd.strip+'/', '')} files to #{@repo}."
         FileUtils.cd @deploy_dir do
           git_pull
           clean_deploy
