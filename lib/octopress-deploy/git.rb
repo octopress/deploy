@@ -79,7 +79,7 @@ CONFIG
             else
               `echo "initialize deploy repo" > _`
               `git add .`
-              `git commit -m 'initial commit'`
+              `git commit -m \"initial commit\"`
               `git branch -m #{@branch}`
               `git rm _`
               `git add -u`
@@ -115,7 +115,7 @@ CONFIG
         FileUtils.cp_r @site_dir + '/.', target_dir
         message = "Site updated at: #{Time.now.utc}"
         `git add --all :/`
-        `git commit -m '#{message}'`
+        `git commit -m \"#{message}\"`
       end
     end
   end
