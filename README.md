@@ -77,11 +77,39 @@ account access information.
 | `verbose`           | [optional] Display all file actions during deploy.    | true         |
 | `region`            | [optional] Region for your AWS bucket                 | us-east-1    |
 | `delete`            | Delete files in `remote_path` not found in `site_dir` | false        |
+| `headers`           | Set headers for matched files                         | []           |
 
 If you choose a bucket which doesn't yet exist, Octopress Deploy will offer to create it for you, and offer to configure it as a static website.
 
 If you configure Octopress to delete files, all files found in the `remote_path` on S3 bucket will be removed unless they match local site files.
 If `remote_path` is a subdirectory, only files in that subdirectory will be evaluated for deletion.
+
+
+### S3 Headers
+
+You can create an array of header congifs to set expiration, content and cache settings for any paths matching the `filename`.
+
+| Header Config       | Description                                           | Default
+|:--------------------|:------------------------------------------------------|:-------------|
+| `filename`          | A regex or a substring of the file to match           |              |
+| `site_dir`          | An http date or a number of years or days from now    |              |
+| `content_type`      | A string which is passed through to the headers       |              |
+| `content_encoding`  | A string which is passed through to the headers       |              |
+| `cache_control`     | A string which is passed through to the headers       |              |
+
+Here is how you might set expriation and cache controls for CSS and Javascript files.
+
+```yaml
+headers:
+  - filename: '^assets.*\.js$'
+    expires: '+3 years'
+    cache_control: 'max-age=94608000'
+    content_type: 'application/javascript'
+  - filename: '^assets.*\.css$'
+    expires: '+3 years'
+    cache_control: 'max-age=94608000'
+    content_type: 'text/css'
+```
 
 ### AWS config via ENV
 

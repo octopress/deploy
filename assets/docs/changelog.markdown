@@ -5,6 +5,13 @@ permalink: /changelog/
 
 
 ## Current version
+###  1.0.0 RC9 - 2014-05-31
+
+- New: S3 header configuration options. [#25](https://github.com/octopress/deploy/issues/25')
+- Fix: `site_dir` defaults to `'_site'`. [#29](https://github.com/octopress/deploy/issues/29')
+- Fix: A Windows OS issue. [#30](https://github.com/octopress/deploy/pull/30).
+
+## Past versions
 
 ###  1.0.0 RC8 - 2014-05-08
 
@@ -18,8 +25,6 @@ permalink: /changelog/
 ### 1.0.0 RC6 - 2014-04-17
 
 - Fixed: CLI options now override config file settings.
-
-## Past versions
 
 ### 1.0.0 RC5 - 2014-04-01
 
