@@ -19,7 +19,7 @@ module Octopress
       #
       def push
         init_repo
-        puts "Syncing #{@site_dir.sub(`pwd`.strip+'/', '')} files to #{@repo}."
+        puts "Syncing #{@site_dir.sub(Dir.pwd.strip+'/', '')} files to #{@repo}."
         FileUtils.cd @deploy_dir do
           git_pull
           clean_deploy
@@ -67,7 +67,8 @@ CONFIG
 
             # initialize the repository and add the remote.
             #
-            `git init; git remote add #{@remote} #{@repo}`
+            `git init`
+            `git remote add #{@remote} #{@repo}`
 
             # Attempt to pull from the remote.
             #
@@ -77,9 +78,12 @@ CONFIG
             # If no branch exists on remote, create one locally.
             else
               `echo "initialize deploy repo" > _`
-              `git add .; git commit -m 'initial commit'`
+              `git add .`
+              `git commit -m \"initial commit\"`
               `git branch -m #{@branch}`
-              `git rm _; git add -u; git commit -m 'cleanup'`
+              `git rm _`
+              `git add -u`
+              `git commit -m 'cleanup'`
             end
           end
         end
@@ -110,7 +114,8 @@ CONFIG
         target_dir = File.join(@deploy_dir, @remote_path).sub(/\/$/,'')
         FileUtils.cp_r @site_dir + '/.', target_dir
         message = "Site updated at: #{Time.now.utc}"
-        `git add --all :/; git commit -m '#{message}'`
+        `git add --all :/`
+        `git commit -m \"#{message}\"`
       end
     end
   end
