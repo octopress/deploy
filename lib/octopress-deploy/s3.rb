@@ -12,7 +12,7 @@ module Octopress
           abort "Deploying to S3 requires aws-sdk. Install with `gem install aws-sdk`."
         end
         @options     = options
-        @local       = options[:site_dir]
+        @local       = options[:site_dir]          || '_site'
         @bucket_name = options[:bucket_name]
         @access_key  = options[:access_key_id]     || ENV['AWS_ACCESS_KEY_ID']
         @secret_key  = options[:secret_access_key] || ENV['AWS_SECRET_ACCESS_KEY']

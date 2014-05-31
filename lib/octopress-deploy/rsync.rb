@@ -7,7 +7,7 @@ module Octopress
         @flags        = @options[:flags] || ' -avz'
         @user         = @options[:user]
         @port         = @options[:port]
-        @local        = @options[:site_dir]
+        @local        = @options[:site_dir] || '_site'
         @remote_path  = @options[:remote_path]
         @exclude      = @options[:exclude]
         @exclude_file = @options[:exclude_file]
