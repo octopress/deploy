@@ -30,7 +30,7 @@ module Octopress
         #abort "Seriously, you should. Quitting..." unless Deploy.check_gitignore
         @bucket = @s3.buckets[@bucket_name]
         if !@bucket.exists?
-          abort "Bucket not found: '#{@bucket_name}'. Check your configuration or create a bucket using: `octopress deploy add_bucket`"
+          abort "Bucket not found: '#{@bucket_name}'. Check your configuration or create a bucket using: `octopress deploy add-bucket`"
         else
           puts "Syncing #{@local} files to #{@bucket_name} on S3."
           write_files
@@ -42,7 +42,7 @@ module Octopress
       def pull
         @bucket = @s3.buckets[@bucket_name]
         if !@bucket.exists?
-          abort "Bucket not found: '#{@bucket_name}'. Check your configuration or create a bucket using: `octopress deploy add_bucket`"
+          abort "Bucket not found: '#{@bucket_name}'. Check your configuration or create a bucket using: `octopress deploy add-bucket`"
         else
           puts "Syncing #{@bucket_name} files to #{@pull_dir} on S3."
           @bucket.objects.each do |object|
