@@ -1,14 +1,17 @@
 # Octopress Deploy Changelog
 
-
 ## Current version
-###  1.0.0 RC9 - 2014-05-31
 
-- New: S3 header configuration options. [#25](https://github.com/octopress/deploy/issues/25')
-- Fix: `site_dir` defaults to `'_site'`. [#29](https://github.com/octopress/deploy/issues/29')
-- Fix: A Windows OS issue. [#30](https://github.com/octopress/deploy/pull/30).
+###  1.0.0 RC10 - 2014-07-06
+- Fix: Pass options to initialization when adding a bucket. [#34](https://github.com/octopress/deploy/pull/34)
 
 ## Past versions
+
+###  1.0.0 RC9 - 2014-05-31
+
+- New: S3 header configuration options. [#25](https://github.com/octopress/deploy/issues/25)
+- Fix: `site_dir` defaults to `'_site'`. [#29](https://github.com/octopress/deploy/issues/29)
+- Fix: A Windows OS issue. [#30](https://github.com/octopress/deploy/pull/30)
 
 ###  1.0.0 RC8 - 2014-05-08
 

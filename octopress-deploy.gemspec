@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = Octopress::Deploy::VERSION
   spec.authors       = ["Brandon Mathis"]
   spec.email         = ["brandon@imathis.com"]
-  spec.description   = %q{Deploy Octopress and Jekyll sites easily}
-  spec.summary       = %q{Deploy Octopress and Jekyll sites easily}
+  spec.description   = %q{Deploy Octopress and Jekyll sites easily.}
+  spec.summary       = %q{Deploy Octopress and Jekyll sites easily.}
   spec.homepage      = "https://github.com/octopress/deploy"
   spec.license       = "MIT"
 
