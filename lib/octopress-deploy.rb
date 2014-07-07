@@ -44,7 +44,7 @@ module Octopress
 
     def self.add_bucket(options={})
       options = merge_configs(options)
-      get_deployment_method(options).new().add_bucket()
+      get_deployment_method(options).new(options).add_bucket()
     end
 
     def self.merge_configs(options={})
