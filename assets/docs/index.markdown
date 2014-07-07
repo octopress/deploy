@@ -10,7 +10,7 @@ Currently this gem supports deploying static sites using S3, Git and Rsync. Pull
 
 Add this line to your application's Gemfile:
 
-    gem 'octopress-deploy', '~> 1.0.0.rc.9'
+    gem 'octopress-deploy', '~> 1.0.0.rc.10'
 
 And then execute:
 
