@@ -114,7 +114,7 @@ CONFIG
         target_dir = File.join(@deploy_dir, @remote_path).sub(/\/$/,'')
         FileUtils.cp_r @site_dir + '/.', target_dir
         message = "Site updated at: #{Time.now.utc}"
-        `git add --all :/`
+        `git add --all .`
         `git commit -m \"#{message}\"`
       end
     end
