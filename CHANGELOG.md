@@ -1,11 +1,10 @@
 # Octopress Deploy Changelog
 
-## Current version
+###  1.0.0 RC11 - 2014-07-06
+- Fix: Changed git add command to be more broadly suitable.
 
 ###  1.0.0 RC10 - 2014-07-06
 - Fix: Pass options to initialization when adding a bucket. [#34](https://github.com/octopress/deploy/pull/34)
-
-## Past versions
 
 ###  1.0.0 RC9 - 2014-05-31
 
