@@ -1,22 +1,15 @@
 # Octopress Deploy
 
-Currently this gem supports deploying static sites using S3, Git and Rsync. Pull request to support other deployment methods are welcome.
+Easily deploy any Jekyll or Octopress site using S3, Git or Rsync.
 
-<!--[![Gem Version](https://badge.fury.io/rb/octopress-deploy.png)](http://badge.fury.io/rb/octopress-deploy)-->
+Pull request to support other deployment methods are welcome.
+
+[![Gem Version](http://img.shields.io/gem/v/octopress-deploy.svg)](https://rubygems.org/gems/octopress-deploy)
+[![License](http://img.shields.io/:license-mit-blue.svg)](http://octopress.mit-license.org)
 
 ## Installation
 
-Add this line to your application's Gemfile:
-
-    gem 'octopress-deploy', '~> 1.0.0.rc.10'
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install octopress-deploy --pre
+To use Octopress Deploy, first install the Octopress gem with `gem install octopress` or by adding it to your Gemfile.
 
 ## Set up
 
@@ -31,7 +24,7 @@ directory which you can edit to add any necessary configuration.
 **Remember to add your configuration to `.gitignore` to be sure
 you never commit sensitive information to your repository.**
 
-## Deploying
+## Deploying your site.
 
 Deployment is tailored to work with Jekyll, but it will work for
 any static site. Simply make sure your configuration points to

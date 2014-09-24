@@ -1,27 +1,8 @@
-module Octopress
-  module Deploy
-    class DeployDocs < Octopress::Ink::Plugin
-      def configuration
-        {
-          name:        "Octopress Deploy",
-          description: "Deploy your site with Git, Rsync or S3.",
-          slug:        "deploy",
-          assets_path: Octopress::Deploy.gem_dir('assets'),
-          version:     Octopress::Deploy::VERSION,
-        }
-      end
+require 'octopress-docs'
 
-      def docs_base_path
-        'docs/deploy'
-      end
-
-      def info(options)
-        if options['docs']
-          super
-        else
-          ''
-        end
-      end
-    end
-  end
-end
+Octopress::Docs.add({
+  name:        "Octopress Deploy",
+  slug:        "deploy",
+  dir:         File.expand_path(File.join(File.dirname(__FILE__), "../../../")),
+  base_url:    "docs/deploy"
+})

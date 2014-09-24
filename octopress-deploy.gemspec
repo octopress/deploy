@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = Octopress::Deploy::VERSION
   spec.authors       = ["Brandon Mathis"]
   spec.email         = ["brandon@imathis.com"]
-  spec.description   = %q{Deploy Octopress and Jekyll sites easily.}
-  spec.summary       = %q{Deploy Octopress and Jekyll sites easily.}
+  spec.description   = %q{Easily deploy any Jekyll or Octopress site using S3, Git, or Rsync.}
+  spec.summary       = %q{Easily deploy any Jekyll or Octopress site using S3, Git, or Rsync.}
   spec.homepage      = "https://github.com/octopress/deploy"
   spec.license       = "MIT"
 
@@ -17,7 +17,6 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
 
-  spec.add_runtime_dependency "octopress", "~> 3.0.0.rc.10"
   spec.add_runtime_dependency "colorator"
 
   spec.add_development_dependency "octopress-ink"
