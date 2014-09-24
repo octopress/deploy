@@ -113,7 +113,7 @@ headers:
 
 ### AWS config via ENV
 
-If you prefer, you can store AWS access credentials in environment variables instead of a conifiguration file. 
+If you prefer, you can store AWS access credentials in environment variables instead of a configuration file. 
 
 | Config              | ENV var                        |
 |:--------------------|:-------------------------------|
