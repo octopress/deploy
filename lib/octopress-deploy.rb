@@ -141,10 +141,3 @@ FILE
 
   end
 end
-
-begin
-  require 'octopress-ink'
-  require 'octopress-deploy/docs'
-  Octopress::Ink.register_plugin(Octopress::Deploy::DeployDocs)
-rescue LoadError
-end
