@@ -10,11 +10,11 @@ module Octopress
         @local        = @options[:site_dir] || '_site'
         @remote_path  = @options[:remote_path]
         @exclude      = @options[:exclude]
-        @exclude_file = @options[:exclude_file]
-        @exclude_file = File.expand_path(@exclude_file) if @exclude_file
+        @exclude_from = @options[:exclude_from]
+        @exclude_from = File.expand_path(@exclude_from) if @exclude_from
         @include      = @options[:include]
-        @exclude_file = @options[:include_file]
-        @exclude_file = File.expand_path(@include_file) if @include_file
+        @exclude_from = @options[:include_from]
+        @exclude_from = File.expand_path(@include_from) if @include_from
         @delete       = @options[:delete] || false
         @pull_dir     = @options[:dir]
       end
@@ -35,10 +35,10 @@ module Octopress
 
         cmd    =  "rsync "
         cmd    << "#{@flags} "
-        cmd    << " -e"                               if @exclude_file || @exclude
-        cmd    << " --exclude-from #{@exclude_file}"  if @exclude_file
+        cmd    << " -e"                               if @exclude_from || @exclude
+        cmd    << " --exclude-from #{@exclude_from}"  if @exclude_from
         cmd    << " --exclude #{@exclude}"            if @exclude
-        cmd    << " --include-from #{@include_file}"  if @include_file
+        cmd    << " --include-from #{@include_from}"  if @include_from
         cmd    << " --include #{@include}"            if @include
         cmd    << " --rsh='ssh -p#{@port}'"           if @user && @port
         cmd    << " --delete "                        if @delete
@@ -59,13 +59,13 @@ module Octopress
 #{"user: #{options[:user]}".ljust(40)}  # The user for your host, e.g. user@host.com
 #{"remote_path: #{options[:remote_path]}".ljust(40)}  # Destination directory
 #{"delete: #{options[:delete]}".ljust(40)}  # Remove files from destination which don't match files in source
+#{"port: #{options[:port]}".ljust(40)}  # If your host requires a non standard port
+#{"flags: #{options[:flags] || ' -avz'}".ljust(40)}  # Modify flags as necessary to suit your hosting setup
 
-#{"# flags: #{options[:flags] || '-rltDvz'}".ljust(40)}  # Modify flags as necessary to suit your hosting setup
-#{"# port: #{options[:port]}".ljust(40)}  # If your host requires a non standard port
-#{"# exclude: ".ljust(40)}  # Path to file containing list of files to exclude
-#{"# exclude-file: ".ljust(40)}  # Path to file containing list of files to exclude
-#{"# include: ".ljust(40)}  # Path to file containing list of files to include
-#{"# include-file: ".ljust(40)}  # Path to file containing list of files to include
+#{"# exclude: ".ljust(40)}  # files to exclude
+#{"# exclude-from: ".ljust(40)}  # Path to file containing list of files to exclude
+#{"# include: ".ljust(40)}  # files to include
+#{"# include-from: ".ljust(40)}  # Path to file containing list of files to include
 CONFIG
       end
       

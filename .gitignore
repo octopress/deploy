@@ -27,3 +27,4 @@ build
 local-git
 local-rsync
 .DS_Store
+_site

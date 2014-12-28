@@ -1,6 +1,0 @@
-method: rsync
-site_dir: build
-user: imathis@imathis.com
-port: 
-remote_path: ~/octopress-deploy/rsync/
-delete:

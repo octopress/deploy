@@ -219,8 +219,8 @@ module Octopress
 #{"access_key_id: #{options[:access_key_id]}".ljust(40)}  # Get this from your AWS console at aws.amazon.com.
 #{"secret_access_key: #{options[:secret_access_key]}".ljust(40)}  # Keep it safe; keep it secret. Keep this file in your .gitignore.
 #{"remote_path: #{options[:remote_path] || '/'}".ljust(40)}  # relative path on bucket where files should be copied.
+#{"region: #{options[:remote_path] || 'us-east-1'}".ljust(40)}  # Region where your bucket is located.
 
-#{"# region: #{options[:region] || 'us-east-1'}".ljust(40)}  # Region where your bucket is located.
 #{"# delete: #{options[:delete] || 'true'}".ljust(40)}  # Remove files from destination which do not match source files.
 #{"# verbose: #{options[:verbose] || 'true'}".ljust(40)}  # Print out all file operations.
 CONFIG

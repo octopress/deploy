@@ -26,11 +26,55 @@ module Octopress
           c.command(:init) do |c|
             c.syntax 'init <METHOD> [options]'
             c.description "Create a configuration file for a deployment method (#{Deploy::METHODS.keys.join(', ')})."
-            c.option 'force', '--force', 'Initialize a config file even if it already exists.'
 
-            c.action do |args, options|
-              options['method'] = args.first
-              Octopress::Deploy.init_config(options)
+            c.command(:rsync) do |c|
+              c.syntax 'rsync [options]'
+              c.description "Create an rsync deployment configuration file."
+              c.option 'user', '-u', '--user USER', 'SSH user (e.g. username@host.org)'
+              c.option 'port', '-p', '--port PORT', 'SSH port (default: 22)'
+              c.option 'flags', '-f', '--flags FLAGS', 'Flags to pass to Rsync command (default: -avz)'
+              c.option 'remote_path', '--dir DIR', 'Path to site directory on host (e.g. ~/webroot/)'
+              c.option 'delete', '--delete', 'Sync file deletion'
+              add_common_init_options(c)
+
+              c.action do |args, options|
+                options['method'] = 'rsync'
+                Octopress::Deploy.init_config(options)
+              end
+            end
+
+            c.command(:git) do |c|
+              c.syntax 'git [options]'
+              c.description "Create a git deployment configuration file."
+              c.option 'git_url', '-u', '--url URL', 'Git url (e.g. git@github.com:user/project)'
+              c.option 'git_branch', '-b', '--branch NAME', 'Branch to deploy to (default: master)'
+              c.option 'remote_path', '-d', '--dir DIR', 'Deploy site into a subdirectory.'
+              c.option 'delete', '--delete', 'Sync file deletion'
+              add_common_init_options(c)
+
+              c.action do |args, options|
+                options['method'] = 'git'
+                options['git_url'].sub!(/^\./, Dir.pwd)
+                Octopress::Deploy.init_config(options)
+              end
+            end
+
+            c.command(:s3) do |c|
+              c.syntax 's3 [options]'
+              c.description "Create an S3 deployment configuration file."
+              c.option 'bucket_name', '-b', '--bucket NAME', 'S3 Bucket name'
+              c.option 'access_key_id', '-a', '--access KEY', 'Access key id'
+              c.option 'secret_access_key', '-s', '--secret KEY', 'Secret access key'
+              c.option 'region', '-r', '--region REGION', 'AWS region (default: us-east-1)'
+              c.option 'remote_path', '-d', '--dir DIR', 'Deploy site into a subdirectory.'
+              c.option 'verbose', '-v', '--verbose', 'Log verbose output when deploying (default: true)'
+              c.option 'delete', '--delete', 'Sync file deletion'
+              add_common_init_options(c)
+
+              c.action do |args, options|
+                options['method'] = 's3'
+                Octopress::Deploy.init_config(options)
+              end
             end
           end
 
@@ -48,6 +92,12 @@ module Octopress
             end
           end
         end
+      end
+
+      def self.add_common_init_options(c)
+        c.option 'site_dir', '--site', 'Path to generated site (default: _site).'
+        c.option 'force', '--force', 'Overwrite any exiting config file.'
+        c.option 'config_file', '--config FILE', 'Choose a config file name. (default. _deploy.yml)'
       end
     end
   end
