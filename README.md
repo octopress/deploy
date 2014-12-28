@@ -24,6 +24,13 @@ directory which you can edit to add any necessary configuration.
 **Remember to add your configuration to `.gitignore` to be sure
 you never commit sensitive information to your repository.**
 
+You can pass configurations as command line options. To see specific options for any method, add the `--help` flag.
+For example to see the options for configuring S3:
+
+```sh
+$ octopress deploy init s3 --help
+```
+
 ## Deploying your site.
 
 Deployment is tailored to work with Jekyll, but it will work for

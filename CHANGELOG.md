@@ -1,6 +1,7 @@
 # Octopress Deploy Changelog
 
 ###  1.0.1 - 2014-12-27
+- Added command line options for setting contents of config file
 - Added support for Octopress docs
 
 ### 1.0.0 - 2014-09-24
