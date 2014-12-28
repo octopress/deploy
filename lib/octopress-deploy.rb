@@ -141,3 +141,10 @@ FILE
 
   end
 end
+
+Octopress::Docs.add({
+  name:        "Octopress Deploy",
+  description: "An Octopress plugin for deploying static websites.",
+  path:        File.expand_path(File.join(File.dirname(__FILE__), "../")),
+  source_url:  "https://github.com/octopress/deploy",
+})
