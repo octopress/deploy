@@ -157,8 +157,9 @@ Only `git_url` is required. Other options will default as shown below.
 | `user`         | ssh user, e.g user@host.com                       |                |
 | `port`         | ssh port                                          | 22             |
 | `remote_path`  | Remote destination's document root                |                |
-| `exclude_file` | Path to a file containing rsync exclusions        |                |
+| `exclude_from` | Path to a file containing rsync exclusions        |                |
 | `exclude`      | Inline list of rsync exclusions                   |                |
+| `include_from` | Path to a file containing rsync inclusions        |                |
 | `include`      | Inline list of inclusions to override exclusions  |                |
 | `delete`       | Delete files in destination not found in source   | false          |
 
