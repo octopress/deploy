@@ -1,11 +1,15 @@
 # Octopress Deploy Changelog
 
-###  1.0.1 - 2014-12-27
-- Added command line options for setting contents of config file
-- Added support for Octopress docs
+### 1.0.2 - 2015-01-02
+
+- Updated Octopress docs integration.
+
+### 1.0.1 - 2014-12-27
+- Added command line options for setting contents of config file.
+- Added support for Octopress docs.
 
 ### 1.0.0 - 2014-09-24
-- Deemed suitable for use
+- Deemed suitable for use.
 
 ###  1.0.0 RC11 - 2014-07-06
 - Fix: Changed git add command to be more broadly suitable.
