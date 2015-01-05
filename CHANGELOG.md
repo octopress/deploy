@@ -1,5 +1,11 @@
 # Octopress Deploy Changelog
 
+### 1.0.3 - 2015-01-04
+
+- On add-bucket, added <NAME> as an optional argument instead of an option flag
+- Added --force option to pull
+- Minor documentation improvements
+
 ### 1.0.2 - 2015-01-02
 
 - Updated Octopress docs integration.

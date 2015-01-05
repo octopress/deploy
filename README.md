@@ -1,21 +1,31 @@
 # Octopress Deploy
 
-Easily deploy any Jekyll or Octopress site using S3, Git or Rsync.
-
-Pull request to support other deployment methods are welcome.
+Easily deploy any static site using S3, Git or Rsync. Pull request to support other deployment methods are welcome.
 
 [![Gem Version](http://img.shields.io/gem/v/octopress-deploy.svg)](https://rubygems.org/gems/octopress-deploy)
 [![License](http://img.shields.io/:license-mit-blue.svg)](http://octopress.mit-license.org)
 
 ## Installation
 
-To use Octopress Deploy, first install the Octopress gem with `gem install octopress` or by adding it to your Gemfile.
+Octopress Deploy is bundled with the Octopress Gem, to use it from the command line, install Octopress first.
+
+```
+$ gem install octopress
+```
+
+## Usage
+
+| Subcommand          | Description                                                        |
+|:--------------------|:-------------------------------------------------------------------|
+| `init <METHOD>`     | Generate a config file for the deployment method. (git, s3, rsync) |
+| `pull <DIR>`        | Pull down your site into a local directory.                        |
+| `add-bucket <NAME>` | (S3 only) Add a bucket using your configured S3 credentials.       |
 
 ## Set up
 
 First set up a configuration file for your deployment method.
 
-```sh
+```
 $ octopress deploy init git  # or rsync, s3
 ```
 
@@ -27,7 +37,7 @@ you never commit sensitive information to your repository.**
 You can pass configurations as command line options. To see specific options for any method, add the `--help` flag.
 For example to see the options for configuring S3:
 
-```sh
+```
 $ octopress deploy init s3 --help
 ```
 
@@ -38,14 +48,14 @@ any static site. Simply make sure your configuration points to
 the root directory of your static site (For Jekyll, that's
 probably `_site`) then tell Octopress to deploy it.
 
-```sh
+```
 $ octopress deploy
 ```
 
 This will read your `_deploy.yml` configuration and deploy your
 site. If you like, you can specify a configuration file.
 
-```sh
+```
 $ octopress deploy --config _staging.yml
 ```
 
@@ -53,8 +63,8 @@ $ octopress deploy --config _staging.yml
 
 With the `pull` command, you can pull your site down into a local directory.
 
-```sh
-octopress deploy pull <DIR>
+```
+$ octopress deploy pull <DIR>
 ```
 
 Mainly you'd do this if you're troubleshooting deployment and you want to see if it's working how you expected.
@@ -126,15 +136,14 @@ Note: configurations in `_deploy.yml` will override environment variables so be 
 
 If your AWS credentials are properly configured, you can add a new bucket with this command.
 
-```sh
-octopress deploy add-bucket
+```
+$ octopress deploy add-bucket <NAME>
 ```
 
 This will connect to AWS, create a new S3 bucket, and configure it for static website hosting. This command can use the settings in your deployment configuration or you can pass options to override those settings.
 
 | Option        | Description                                      | Default
 |:--------------|:-------------------------------------------------|:---------------|
-| `--name`      | Override the `bucket_name` configuration         |                |
 | `--region`    | Override the `region` configuration              |                |
 | `--index`     | Specify an index page for your site              | index.html     |
 | `--error`     | Specify an error page for your site              | error.html     |
