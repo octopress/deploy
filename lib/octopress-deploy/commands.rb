@@ -55,7 +55,11 @@ module Octopress
 
               c.action do |args, options|
                 options['method'] = 'git'
-                options['git_url'].sub!(/^\./, Dir.pwd)
+                if options['git_url']
+                  options['git_url'].sub!(/^\./, Dir.pwd)
+                else
+                  abort("#{c}\n\ngit url missing")
+                end
                 Octopress::Deploy.init_config(options)
               end
             end
