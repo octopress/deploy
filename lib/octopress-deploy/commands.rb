@@ -55,6 +55,7 @@ module Octopress
 
               c.action do |args, options|
                 options['method'] = 'git'
+                abort("You need to specify the git url with the -u option") if !options['git_url']
                 options['git_url'].sub!(/^\./, Dir.pwd)
                 Octopress::Deploy.init_config(options)
               end
