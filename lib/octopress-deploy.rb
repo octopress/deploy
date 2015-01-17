@@ -117,7 +117,7 @@ module Octopress
     def self.get_config
       <<-FILE
 #{"method: #{@options[:method]}".ljust(40)}  # How do you want to deploy? git, rsync or s3.
-#{"site_dir: #{@options[:site_dir]}".ljust(40)}  # Location of your your static site files.
+#{"site_dir: #{@options[:site_dir]}".ljust(40)}  # Location of your static site files.
 
 #{get_deployment_method(@options).default_config(@options)}
 FILE
