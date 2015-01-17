@@ -1,5 +1,5 @@
 method: rsync                             # How do you want to deploy? git, rsync or s3.
-site_dir: _site                           # Location of your your static site files.
+site_dir: _site                           # Location of your static site files.
 
 user:                                     # The user for your host, e.g. user@host.com
 remote_path: local-rsync                  # Destination directory
