@@ -1,5 +1,5 @@
 method: git                               # How do you want to deploy? git, rsync or s3.
-site_dir: _site                           # Location of your your static site files.
+site_dir: _site                           # Location of your static site files.
 
 git_url: /Users/imathis/workspace/octodev/deploy/test/local-git  # remote repository url, e.g. git@github.com:username/repo_name
 
