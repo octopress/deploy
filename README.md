@@ -15,18 +15,20 @@ $ gem install octopress
 
 ## Usage
 
-| Subcommand          | Description                                                        |
-|:--------------------|:-------------------------------------------------------------------|
-| `init <METHOD>`     | Generate a config file for the deployment method. (git, s3, rsync) |
-| `pull <DIR>`        | Pull down your site into a local directory.                        |
-| `add-bucket <NAME>` | (S3 only) Add a bucket using your configured S3 credentials.       |
+| Subcommand                | Description                                                        |
+|:--------------------------|:-------------------------------------------------------------------|
+| `init <METHOD> [options]` | Generate a config file for the deployment method. (git, s3, rsync) |
+| `pull <DIR>`              | Pull down your site into a local directory.                        |
+| `add-bucket <NAME>`       | (S3 only) Add a bucket using your configured S3 credentials.       |
 
 ## Set up
 
 First set up a configuration file for your deployment method.
 
 ```
-$ octopress deploy init git  # or rsync, s3
+$ octopress deploy init git --url git@github.com:user/project
+$ octopress deploy init s3
+$ octopress deploy init rsync
 ```
 
 This will generate a `_deploy.yml` file in your current

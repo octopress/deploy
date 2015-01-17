@@ -1,6 +1,6 @@
-# Octopress Deploy Changelog
+# Changelog
 
-### 1.0.4 - 2015-01-15
+### 1.0.4 - 2015-01-17
 
 - Improved help messaging on `deploy init git`.
 
