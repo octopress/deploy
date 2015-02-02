@@ -86,7 +86,7 @@ account access information.
 | `access_key_id`     | AWS access key                                        |              |
 | `secret_access_key` | AWS secret key                                        |              |
 | `remote_path`       | Directory files should be synced to.                  | /            |
-| `verbose`           | [optional] Display all file actions during deploy.    | true         |
+| `verbose`           | [optional] Display all file actions during deploy.    | false        |
 | `region`            | [optional] Region for your AWS bucket                 | us-east-1    |
 | `delete`            | Delete files in `remote_path` not found in `site_dir` | false        |
 | `headers`           | Set headers for matched files                         | []           |

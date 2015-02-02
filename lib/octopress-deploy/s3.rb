@@ -18,7 +18,7 @@ module Octopress
         @secret_key  = options[:secret_access_key] || ENV['AWS_SECRET_ACCESS_KEY']
         @region      = options[:region]            || ENV['AWS_DEFAULT_REGION'] || 'us-east-1'
         @remote_path = (options[:remote_path]      || '/').sub(/^\//,'')
-        @verbose     = options[:verbose]           || true
+        @verbose     = options[:verbose]
         @delete      = options[:delete]
         @headers     = options[:headers]           || []
         @remote_path = @remote_path.sub(/^\//,'')  # remove leading slash
@@ -220,9 +220,9 @@ module Octopress
 #{"secret_access_key: #{options[:secret_access_key]}".ljust(40)}  # Keep it safe; keep it secret. Keep this file in your .gitignore.
 #{"remote_path: #{options[:remote_path] || '/'}".ljust(40)}  # relative path on bucket where files should be copied.
 #{"region: #{options[:remote_path] || 'us-east-1'}".ljust(40)}  # Region where your bucket is located.
+#{"verbose: true".ljust(40)}  # Print out all file operations.
 
-#{"# delete: #{options[:delete] || 'true'}".ljust(40)}  # Remove files from destination which do not match source files.
-#{"# verbose: #{options[:verbose] || 'true'}".ljust(40)}  # Print out all file operations.
+#{"# delete: true".ljust(40)}  # Remove files from destination which do not match source files.
 CONFIG
       end
 
