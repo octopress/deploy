@@ -83,6 +83,8 @@ module Octopress
       def get_file_with_metadata(file, s3_filename)
         file_with_options = {:file => file }
 
+        file_with_options[:acl] = :public_read
+
         @headers.each do |conf|
           if conf.has_key? 'filename' and s3_filename.match(conf['filename'])
             if @verbose
