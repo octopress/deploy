@@ -9,7 +9,7 @@ module Octopress
         begin
           require 'aws-sdk'
         rescue LoadError
-          abort "Deploying to S3 requires aws-sdk. Install with `gem install aws-sdk`."
+          abort "Deploying to S3 requires the aws-sdk gem. Install with `gem install aws-sdk`."
         end
         @options     = options
         @local       = options[:site_dir]          || '_site'
@@ -44,12 +44,18 @@ module Octopress
         if !@bucket.exists?
           abort "Bucket not found: '#{@bucket_name}'. Check your configuration or create a bucket using: `octopress deploy add-bucket`"
         else
-          puts "Syncing #{@bucket_name} files to #{@pull_dir} on S3."
+          puts "Syncing from S3 bucket: '#{@bucket_name}' to #{@pull_dir}."
           @bucket.objects.each do |object|
             path = File.join(@pull_dir, object.key)
-            dir = File.dirname(path)
-            FileUtils.mkdir_p(dir) unless Dir.exist?(dir)
-            File.open(path, 'w') { |f| f.write(object.read) }
+
+            # Path is a directory, not a file
+            if path =~ /\/$/ 
+              FileUtils.mkdir_p(path) unless File.directory?(path)
+            else
+              dir = File.dirname(path)
+              FileUtils.mkdir_p(dir) unless File.directory?(dir)
+              File.open(path, 'w') { |f| f.write(object.read) }
+            end
           end
         end
       end
@@ -81,9 +87,10 @@ module Octopress
       end
 
       def get_file_with_metadata(file, s3_filename)
-        file_with_options = {:file => file }
-
-        file_with_options[:acl] = :public_read
+        file_with_options = {
+          :file => file,
+          :acl => :public_read
+        }
 
         @headers.each do |conf|
           if conf.has_key? 'filename' and s3_filename.match(conf['filename'])
@@ -224,7 +231,8 @@ module Octopress
 #{"region: #{options[:remote_path] || 'us-east-1'}".ljust(40)}  # Region where your bucket is located.
 #{"verbose: true".ljust(40)}  # Print out all file operations.
 
-#{"# delete: true".ljust(40)}  # Remove files from destination which do not match source files.
+#{"# delete: #{options[:delete] || 'true'}".ljust(40)}  # Remove files from destination which do not match source files.
+#{"# verbose: #{options[:verbose] || 'false'}".ljust(40)}  # Print out all file operations.
 CONFIG
       end
 

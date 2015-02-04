@@ -5,7 +5,7 @@
     reset: 
       - cleanup
       - cp -r source/ _site
-      - ruby garbage.rb
+      - ruby _garbage.rb
 -
   title: Test local Rsync
   before: 
