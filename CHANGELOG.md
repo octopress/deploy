@@ -1,5 +1,10 @@
 # Changelog
 
+### 1.0.5 - 2015-02-04
+
+- Fixed issue where an S3 pull wouldn't create some directories.
+- On S3 deploying, verbose now defaults to false.
+
 ### 1.0.4 - 2015-01-17
 
 - Improved help messaging on `deploy init git`.
