@@ -75,6 +75,7 @@ module Octopress
               c.option 'region', '-r', '--region REGION', 'AWS region (default: us-east-1)'
               c.option 'remote_path', '-d', '--dir DIR', 'Deploy site into a subdirectory.'
               c.option 'verbose', '-v', '--verbose', 'Log verbose output when deploying'
+              c.option 'incremental', '-i', '--incremental', 'Only upload new/changed files'
               c.option 'delete', '--delete', 'Sync file deletion'
               add_common_init_options(c)
 

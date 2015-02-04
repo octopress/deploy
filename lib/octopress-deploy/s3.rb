@@ -19,6 +19,7 @@ module Octopress
         @region      = options[:region]            || ENV['AWS_DEFAULT_REGION'] || 'us-east-1'
         @remote_path = (options[:remote_path]      || '/').sub(/^\//,'')
         @verbose     = options[:verbose]
+        @incremental = options[:incremental]
         @delete      = options[:delete]
         @headers     = options[:headers]           || []
         @remote_path = @remote_path.sub(/^\//,'')  # remove leading slash
@@ -76,12 +77,21 @@ module Octopress
           s3_filename = remote_path(file)
           o = @bucket.objects[s3_filename]
           file_with_options = get_file_with_metadata(file, s3_filename);
+          s3sum = o.etag.tr('"','')
 
-          o.write(file_with_options)
-          if @verbose
-            puts "+ #{remote_path(file)}"
-          else
-            progress('+')
+          if @incremental && (s3sum == Digest::MD5.file(file).hexdigest)
+            if @verbose
+              puts "= #{remote_path(file)}"
+            else
+              progress('=')
+            end
+          else 
+            o.write(file_with_options)
+            if @verbose
+              puts "+ #{remote_path(file)}"
+            else
+              progress('+')
+            end
           end
         end
       end
@@ -233,6 +243,7 @@ module Octopress
 
 #{"# delete: #{options[:delete] || 'true'}".ljust(40)}  # Remove files from destination which do not match source files.
 #{"# verbose: #{options[:verbose] || 'false'}".ljust(40)}  # Print out all file operations.
+#{"# incremental: false".ljust(40)}  # Only upload new/changed files
 CONFIG
       end
 
