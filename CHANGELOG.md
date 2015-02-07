@@ -1,5 +1,9 @@
 # Changelog
 
+### 1.0.5 - 2015-02-06
+
+- Added incremental uploads to S3. [#46](https://github.com/octopress/deploy/pull/46)
+
 ### 1.0.5 - 2015-02-04
 
 - Fixed issue where an S3 pull wouldn't create some directories.
