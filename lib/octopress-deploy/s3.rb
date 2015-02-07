@@ -239,11 +239,9 @@ module Octopress
 #{"secret_access_key: #{options[:secret_access_key]}".ljust(40)}  # Keep it safe; keep it secret. Keep this file in your .gitignore.
 #{"remote_path: #{options[:remote_path] || '/'}".ljust(40)}  # relative path on bucket where files should be copied.
 #{"region: #{options[:remote_path] || 'us-east-1'}".ljust(40)}  # Region where your bucket is located.
-#{"verbose: true".ljust(40)}  # Print out all file operations.
-
-#{"# delete: #{options[:delete] || 'true'}".ljust(40)}  # Remove files from destination which do not match source files.
-#{"# verbose: #{options[:verbose] || 'false'}".ljust(40)}  # Print out all file operations.
-#{"# incremental: false".ljust(40)}  # Only upload new/changed files
+#{"verbose: #{options[:verbose] || 'false'}".ljust(40)}  # Print out all file operations.
+#{"incremental: #{options[:incremental] || 'false'}".ljust(40)}  # Only upload new/changed files
+#{"delete: #{options[:delete] || 'false'}".ljust(40)}  # Remove files from destination which do not match source files.
 CONFIG
       end
 
