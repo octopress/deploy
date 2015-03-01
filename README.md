@@ -85,6 +85,7 @@ account access information.
 | `bucket_name`       | S3 bucket name                                        |              |
 | `access_key_id`     | AWS access key                                        |              |
 | `secret_access_key` | AWS secret key                                        |              |
+| `distribution_id`   | [optional] AWS CloudFront distribution id             |              |
 | `remote_path`       | Directory files should be synced to.                  | /            |
 | `verbose`           | [optional] Display all file actions during deploy.    | false        |
 | `incremental`       | [optional] Incremental deploy (only updated files)    | false        |
