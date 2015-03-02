@@ -37,7 +37,6 @@ module Octopress
           puts "Syncing #{@local} files to #{@bucket_name} on S3."
           write_files
           delete_files if delete_files?
-          invalidate_cache unless @distro_id.nil?
           status_message
         end
       end
@@ -69,18 +68,19 @@ module Octopress
       def connect
         AWS.config(access_key_id: @access_key, secret_access_key: @secret_key, region: @region)
         @s3 = AWS.s3
-        @cloudfront = AWS.cloudfront.client
+        @cloudfront = AWS.cloud_front.client
       end
 
       # Write site files to the selected bucket
       #
       def write_files
         puts "Writing #{pluralize('file', site_files.size)}:" if @verbose
+        files_to_invalidate = []
         site_files.each do |file|
           s3_filename = remote_path(file)
           o = @bucket.objects[s3_filename]
           file_with_options = get_file_with_metadata(file, s3_filename);
-          s3sum = o.etag.tr('"','')
+          s3sum = o.etag.tr('"','') if o.exists?
 
           if @incremental && (s3sum == Digest::MD5.file(file).hexdigest)
             if @verbose
@@ -90,30 +90,6 @@ module Octopress
             end
           else 
             o.write(file_with_options)
-            if @verbose
-              puts "+ #{remote_path(file)}"
-            else
-              progress('+')
-            end
-          end
-        end
-      end
-
-      def invalidate_cache
-        puts "Invalidating cache for #{pluralize('file', site_files.size)}:" if @verbose
-        files_to_invalidate = []
-        site_files.each do |file|
-          s3_filename = remote_path(file)
-          o = @bucket.objects[s3_filename]
-          file_with_options = get_file_with_metadata(file, s3_filename);
-          s3sum = o.etag.tr('"','')
-          if @incremental && (s3sum == Digest::MD5.file(file).hexdigest)
-            if @verbose
-              puts "= #{remote_path(file)}"
-            else
-              progress('=')
-            end
-          else 
             files_to_invalidate.push(file)
             if @verbose
               puts "+ #{remote_path(file)}"
@@ -122,16 +98,23 @@ module Octopress
             end
           end
         end
+
+        invalidate_cache(files_to_invalidate) unless @distro_id.nil?
+      end
+
+      def invalidate_cache(files)
+        puts "Invalidating cache for #{pluralize('file', site_files.size)}" if @verbose
         @cloudfront.create_invalidation(
           distribution_id: @distro_id, 
           invalidation_batch:{
             paths:{
-              quantity: files_to_invalidate.size,
-              items: files_to_invalidate
+              quantity: files.size,
+              items: files.map{|file| "/" + remote_path(file)}
             }, 
             # String of 8 random chars to uniquely id this invalidation
             caller_reference: (0...8).map { ('a'..'z').to_a[rand(26)] }.join
           }
+        ) unless files.empty?
       end
 
       def get_file_with_metadata(file, s3_filename)
