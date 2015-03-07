@@ -23,7 +23,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "octopress"
   spec.add_development_dependency "rake"
   spec.add_development_dependency "clash"
-  spec.add_development_dependency "aws-sdk"
+  spec.add_development_dependency "aws-sdk-v1"
 
   if RUBY_VERSION >= "2"
     spec.add_development_dependency "pry-byebug"

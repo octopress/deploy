@@ -73,7 +73,7 @@ Mainly you'd do this if you're troubleshooting deployment and you want to see if
 
 ## Amazon S3 Deployment Configuration
 
-To deploy with Amazon S3 you will need to install the [aws-sdk gem](https://rubygems.org/gems/aws-sdk).
+To deploy with Amazon S3 you will need to install the [aws-sdk-v1 gem](https://rubygems.org/gems/aws-sdk-v1).
 
 Important: when using S3, you must add your `_deploy.yml` to your .gitignore to prevent accidentally sharing
 account access information.
