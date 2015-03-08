@@ -1,6 +1,10 @@
 # Changelog
 
-### 1.0.5 - 2015-02-06
+### 1.2.0 - 2015-03-07 
+
+- Added Support for Cloudfront invalidation [#49](https://github.com/octopress/deploy/pull/49)
+
+### 1.1.0 - 2015-02-06
 
 - Added incremental uploads to S3. [#46](https://github.com/octopress/deploy/pull/46)
 
