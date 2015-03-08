@@ -7,9 +7,9 @@ module Octopress
 
       def initialize(options)
         begin
-          require 'aws-sdk'
+          require 'aws-sdk-v1'
         rescue LoadError
-          abort "Deploying to S3 requires the aws-sdk gem. Install with `gem install aws-sdk`."
+          abort "Deploying to S3 requires the aws-sdk-v1 gem. Install with `gem install aws-sdk-v1`."
         end
         @options     = options
         @local       = options[:site_dir]          || '_site'
@@ -77,7 +77,11 @@ module Octopress
           s3_filename = remote_path(file)
           o = @bucket.objects[s3_filename]
           file_with_options = get_file_with_metadata(file, s3_filename);
-          s3sum = o.etag.tr('"','')
+          begin
+            s3sum = o.etag.tr('"','')
+          rescue AWS::S3::Errors::NoSuchKey
+            s3sum = ""
+          end
 
           if @incremental && (s3sum == Digest::MD5.file(file).hexdigest)
             if @verbose
