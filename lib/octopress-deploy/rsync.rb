@@ -13,8 +13,8 @@ module Octopress
         @exclude_from = @options[:exclude_from]
         @exclude_from = File.expand_path(@exclude_from) if @exclude_from
         @include      = @options[:include]
-        @exclude_from = @options[:include_from]
-        @exclude_from = File.expand_path(@include_from) if @include_from
+        @include_from = @options[:include_from]
+        @include_from = File.expand_path(@include_from) if @include_from
         @delete       = @options[:delete] || false
         @pull_dir     = @options[:dir]
       end
@@ -35,11 +35,14 @@ module Octopress
 
         cmd    =  "rsync "
         cmd    << "#{@flags} "
-        cmd    << " -e"                               if @exclude_from || @exclude
         cmd    << " --exclude-from #{@exclude_from}"  if @exclude_from
-        cmd    << " --exclude #{@exclude}"            if @exclude
+        Array(@exclude).each do |e|
+          cmd  << " --exclude #{e}"
+        end
         cmd    << " --include-from #{@include_from}"  if @include_from
-        cmd    << " --include #{@include}"            if @include
+        Array(@include).each do |i|
+          cmd  << " --include #{i}"
+        end
         cmd    << " --rsh='ssh -p#{@port}'"           if @user && @port
         cmd    << " --delete "                        if @delete
 
@@ -68,7 +71,7 @@ module Octopress
 #{"# include-from: ".ljust(40)}  # Path to file containing list of files to include
 CONFIG
       end
-      
+
     end
   end
 end
