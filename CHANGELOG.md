@@ -1,5 +1,9 @@
 # Changelog
 
+### 1.2.1 - 2015-04-25 
+
+- Fix: Rsync exclude and include options now work properly with multiple items.
+
 ### 1.2.0 - 2015-03-07 
 
 - Added Support for Cloudfront invalidation [#49](https://github.com/octopress/deploy/pull/49)
