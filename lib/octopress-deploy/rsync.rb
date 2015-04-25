@@ -13,8 +13,8 @@ module Octopress
         @exclude_from = @options[:exclude_from]
         @exclude_from = File.expand_path(@exclude_from) if @exclude_from
         @include      = @options[:include]
-        @exclude_from = @options[:include_from]
-        @exclude_from = File.expand_path(@include_from) if @include_from
+        @include_from = @options[:include_from]
+        @include_from = File.expand_path(@include_from) if @include_from
         @delete       = @options[:delete] || false
         @pull_dir     = @options[:dir]
       end
@@ -67,7 +67,7 @@ module Octopress
 #{"# include-from: ".ljust(40)}  # Path to file containing list of files to include
 CONFIG
       end
-      
+
     end
   end
 end
