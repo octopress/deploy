@@ -36,9 +36,13 @@ module Octopress
         cmd    =  "rsync "
         cmd    << "#{@flags} "
         cmd    << " --exclude-from #{@exclude_from}"  if @exclude_from
-        cmd    << " --exclude #{@exclude}"            if @exclude
+        Array(@exclude).each do |e|
+          cmd  << " --exclude #{e}"
+        end
         cmd    << " --include-from #{@include_from}"  if @include_from
-        cmd    << " --include #{@include}"            if @include
+        Array(@include).each do |i|
+          cmd  << " --include #{i}"
+        end
         cmd    << " --rsh='ssh -p#{@port}'"           if @user && @port
         cmd    << " --delete "                        if @delete
 
