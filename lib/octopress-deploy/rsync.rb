@@ -35,7 +35,6 @@ module Octopress
 
         cmd    =  "rsync "
         cmd    << "#{@flags} "
-        cmd    << " -e"                               if @exclude_from || @exclude
         cmd    << " --exclude-from #{@exclude_from}"  if @exclude_from
         cmd    << " --exclude #{@exclude}"            if @exclude
         cmd    << " --include-from #{@include_from}"  if @include_from
