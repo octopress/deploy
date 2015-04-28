@@ -1,5 +1,9 @@
 # Changelog
 
+### 1.2.1 - 2015-04-28
+- Fix: On deploy init git, moved git URL from option to argument since it is required.
+- Minor: Now preventing deploy to working branch, complete with helpful error message.
+
 ### 1.2.1 - 2015-04-25 
 
 - Fix: Rsync exclude and include options now work properly with multiple items.

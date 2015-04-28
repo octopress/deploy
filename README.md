@@ -26,7 +26,7 @@ $ gem install octopress
 First set up a configuration file for your deployment method.
 
 ```
-$ octopress deploy init git --url git@github.com:user/project
+$ octopress deploy init git git@github.com:user/project
 $ octopress deploy init s3
 $ octopress deploy init rsync
 ```
