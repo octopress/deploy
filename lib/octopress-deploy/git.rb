@@ -18,6 +18,7 @@ module Octopress
       # Initialize, pull, copy and deploy.
       #
       def push
+        check_branch
         init_repo
         puts "Syncing #{@site_dir.sub(Dir.pwd.strip+'/', '')} files to #{@repo}."
         FileUtils.cd @deploy_dir do
@@ -32,9 +33,29 @@ module Octopress
         `git clone -b #{@branch} #{@repo} #{@pull_dir}`
       end
 
+      # Ensure that the deploy branch is not that same as the current working branch
+      #
+      def check_branch
+        same_branch = `git branch -a` =~ /\* #{@branch}/
+
+        if current_remote = `git remote -v`.match(/\s\S+/)
+          same_remote = current_remote[0].match(/#{@repo}/)
+        end
+
+        if same_remote && same_branch
+          puts "Deploy to #{@branch} canceled:".red 
+          puts "You cannot deploy to the same branch you are working in. This will overwrite the source for your site.\n"
+          puts "First, back up your site's source to a branch:"
+          puts "\n  git checkout -b source".yellow
+          puts "  git push origin source".yellow
+          puts "\nWith that, you'll work in the #{"source".bold} branch and deploy to the #{@branch.bold} branch."
+          abort
+        end
+      end
+
       # Check to see if local deployment dir is configured to deploy.
       #
-      def check_repo
+      def check_deploy_dir
         if Dir.exist? @deploy_dir
           FileUtils.cd @deploy_dir do
             return `git remote -v`.include? @repo
@@ -60,7 +81,7 @@ CONFIG
       # If necessary create deploy directory and initialize it with deployment remote.
       #
       def init_repo
-        return if check_repo
+        return if check_deploy_dir
         FileUtils.mkdir_p @deploy_dir
         FileUtils.cd @deploy_dir do
           if Dir[@deploy_dir+'/*'].empty?

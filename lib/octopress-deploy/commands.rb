@@ -45,9 +45,8 @@ module Octopress
             end
 
             c.command(:git) do |c|
-              c.syntax 'git [options]'
+              c.syntax 'git <URL> [options]'
               c.description "Create a git deployment configuration file."
-              c.option 'git_url', '-u', '--url URL', 'Git url (e.g. git@github.com:user/project)'
               c.option 'git_branch', '-b', '--branch NAME', 'Branch to deploy to (default: master)'
               c.option 'remote_path', '-d', '--dir DIR', 'Deploy site into a subdirectory.'
               c.option 'delete', '--delete', 'Sync file deletion'
@@ -55,8 +54,9 @@ module Octopress
 
               c.action do |args, options|
                 options['method'] = 'git'
+                options['git_url'] = args.first
                 if options['git_url']
-                  options['git_url'].sub!(/^\./, Dir.pwd)
+                  options['git_url'] = options['git_url'].sub(/^\./, Dir.pwd)
                 else
                   $stderr.puts "git url missing"
                   puts c # print the help

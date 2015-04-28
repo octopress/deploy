@@ -27,7 +27,7 @@
   before: 
     - reset
     - git init --bare local-git
-    - octopress deploy init git --branch test_git_deploy --url ./local-git --dir site --config _git_deploy_local.yml --force
+    - octopress deploy init git ./local-git --branch test_git_deploy --dir site --config _git_deploy_local.yml --force
     - octopress deploy --config _git_deploy_local.yml
     - octopress deploy pull pull-git --config _git_deploy_local.yml
     - rm -rf pull-git/.git
@@ -37,7 +37,7 @@
   title: Test remote Git
   before: 
     - reset
-    - octopress deploy init git --branch test_git_deploy --url git@github.com:octopress/deploy --config _git_deploy.yml --force
+    - octopress deploy init git git@github.com:octopress/deploy --branch test_git_deploy --config _git_deploy.yml --force
     - octopress deploy --config _git_deploy.yml
     - octopress deploy pull pull-git --config _git_deploy.yml
     - rm -rf pull-git/.git
