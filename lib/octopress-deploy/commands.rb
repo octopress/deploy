@@ -6,7 +6,7 @@ module Octopress
           c.syntax "deploy [options]"
           c.version Deploy::VERSION
           c.description "Deploy your Octopress site."
-          c.option "config_file", "--config FILE", "The path to your config file (default: _deploy.yml)"
+          c.option "config_file", "-c", "--config FILE", "The path to your config file (default: _deploy.yml)"
 
           c.action do |args, options|
             Octopress::Deploy.push(options)
@@ -15,8 +15,8 @@ module Octopress
           c.command(:pull) do |c|
             c.syntax "pull <DIR>"
             c.description "Pull down the published copy of your site into DIR"
-            c.option 'force', '--force', 'Overwrite existing files on pull'
-            c.option "config_file", "--config FILE", "The path to your config file (default: _deploy.yml)"
+            c.option 'force', '-f', '--force', 'Overwrite existing files on pull'
+            c.option "config_file", "-c", "--config FILE", "The path to your config file (default: _deploy.yml)"
 
             c.action do |args, options|
               options['dir'] = args.first
@@ -33,7 +33,7 @@ module Octopress
               c.description "Create an rsync deployment configuration file."
               c.option 'user', '-u', '--user USER', 'SSH user (e.g. username@host.org)'
               c.option 'port', '-p', '--port PORT', 'SSH port (default: 22)'
-              c.option 'flags', '-f', '--flags FLAGS', 'Flags to pass to Rsync command (default: -avz)'
+              c.option 'flags', '-F', '--flags FLAGS', 'Flags to pass to Rsync command (default: -avz)'
               c.option 'remote_path', '--dir DIR', 'Path to site directory on host (e.g. ~/webroot/)'
               c.option 'delete', '--delete', 'Sync file deletion'
               add_common_init_options(c)
@@ -92,7 +92,7 @@ module Octopress
             c.option 'region','--region REGION','Choose a region. (Defaults: to region in config file)'
             c.option 'index_page','--index PAGE','Specify an index page. (Default: index.html)'
             c.option 'error_page','--error PAGE','Specify an error page. (Default: 404.html)'
-            c.option "config_file", "--config FILE", "The path to your config file (default: _deploy.yml)"
+            c.option "config_file", "-c", "--config FILE", "The path to your config file (default: _deploy.yml)"
 
             c.action do |args, options|
               options['bucket_name'] = args.first
@@ -104,8 +104,8 @@ module Octopress
 
       def self.add_common_init_options(c)
         c.option 'site_dir', '--site', 'Path to generated site (default: _site).'
-        c.option 'force', '--force', 'Overwrite any exiting config file.'
-        c.option 'config_file', '--config FILE', 'Choose a config file name. (default. _deploy.yml)'
+        c.option 'force', '-f', '--force', 'Overwrite any exiting config file.'
+        c.option 'config_file', "-c", '--config FILE', 'Choose a config file name. (default. _deploy.yml)'
       end
     end
   end
