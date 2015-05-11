@@ -103,7 +103,7 @@ module Octopress
       end
 
       def self.add_common_init_options(c)
-        c.option 'site_dir', '--site', 'Path to generated site (default: _site).'
+        c.option 'site_dir', '--site DIR', 'Path to generated site (default: _site).'
         c.option 'force', '-f', '--force', 'Overwrite any exiting config file.'
         c.option 'config_file', "-c", '--config FILE', 'Choose a config file name. (default. _deploy.yml)'
       end

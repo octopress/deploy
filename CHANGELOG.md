@@ -1,5 +1,8 @@
 # Changelog
 
+### 1.2.4 - 2015-05-11
+- Fix: `--site` flag now accepts an option as it should.
+
 ### 1.2.3 - 2015-05-01
 - Minor: Added short flags for --config and --force
 
