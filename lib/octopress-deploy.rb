@@ -53,6 +53,13 @@ module Octopress
     def self.merge_configs(options={})
       options = check_config(options)
       config  = SafeYAML.load(File.open(options[:config_file])).to_symbol_keys
+
+      if stage = options[:stage]
+        config = config.fetch(stage.to_sym)
+      elsif config.key?(:production)
+        config = config[:production]
+      end
+
       options = config.deep_merge(options)
     end
 

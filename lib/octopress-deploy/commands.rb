@@ -7,6 +7,7 @@ module Octopress
           c.version Deploy::VERSION
           c.description "Deploy your Octopress site."
           c.option "config_file", "-c", "--config FILE", "The path to your config file (default: _deploy.yml)"
+          c.option "stage", "-s", "--stage STAGE", "The stage for deployment (default: production)"
 
           c.action do |args, options|
             Octopress::Deploy.push(options)
