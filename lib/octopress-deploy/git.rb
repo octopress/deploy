@@ -111,7 +111,21 @@ CONFIG
       end
 
       def git_push
-        `git push #{@remote} #{@branch}`
+        if `git remote -v` =~ /#{@remote}\s+#{@repo}.+\(push\)/
+          `git push #{@remote} #{@branch}`
+        else
+          remotes = `git remote -v`
+          push_remote = remotes.match(/^origin\s+(.+)\s+\(push\)/)
+          if push_remote
+            abort %Q{Deployment remote #{@remote} is pointing to "#{push_remote[1]}" but configuration points to #{@remote}
+  To reset your deployment, run:
+  rm -rf #{@deploy_dir}
+  octopress deploy}
+          else
+            abort %Q{Deployment remote configured improperly. To reset your deployment run:
+  rm -rf #{@deploy_dir}
+  octopress deploy}
+        end
       end
 
       # Attempt to pull from the remote branch
