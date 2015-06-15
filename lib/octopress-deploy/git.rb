@@ -125,6 +125,7 @@ CONFIG
             abort %Q{Deployment remote configured improperly. To reset your deployment run:
   rm -rf #{@deploy_dir}
   octopress deploy}
+          end
         end
       end
 
