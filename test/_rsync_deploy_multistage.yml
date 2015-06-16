@@ -1,0 +1,16 @@
+shared: &shared
+  method: rsync                             # How do you want to deploy? git, rsync or s3.
+  site_dir: _site                           # Location of your static site files.
+
+  user:                                     # The user for your host, e.g. user@host.com
+  delete:                                   # Remove files from destination which don't match files in source
+  port:                                     # If your host requires a non standard port
+  flags:  -avz                              # Modify flags as necessary to suit your hosting setup
+
+staging:
+  <<: *shared
+  remote_path: local-staging-rsync
+
+production:
+  <<: *shared
+  remote_path: local-production-rsync

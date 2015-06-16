@@ -1,14 +1,14 @@
 -
   tasks:
     cleanup:
-      - rm -rf build local-rsync pull-rsync pull-s3 .deploy pull-git local-git pull-s3 remote-rsync
-    reset: 
+      - rm -rf build local-rsync local-staging-rsync local-production-rsync pull-staging-rsync pull-production-rsync pull-rsync pull-s3 .deploy pull-git local-git pull-s3 remote-rsync
+    reset:
       - cleanup
       - cp -r source/ _site
       - ruby garbage.rb
 -
   title: Test local Rsync
-  before: 
+  before:
     - reset
     - octopress deploy init rsync --dir local-rsync --config _rsync_deploy_local.yml --force
     - octopress deploy --config _rsync_deploy_local.yml
@@ -16,7 +16,7 @@
 
 -
   title: Test remote Rsync
-  before: 
+  before:
     - reset
     - octopress deploy --config _rsync_deploy.yml
     - octopress deploy pull pull-rsync --config _rsync_deploy.yml
@@ -24,7 +24,7 @@
 
 -
   title: Test local Git
-  before: 
+  before:
     - reset
     - git init --bare local-git
     - octopress deploy init git ./local-git --branch test_git_deploy --dir site --config _git_deploy_local.yml --force
@@ -35,7 +35,7 @@
 
 -
   title: Test remote Git
-  before: 
+  before:
     - reset
     - octopress deploy init git git@github.com:octopress/deploy --branch test_git_deploy --config _git_deploy.yml --force
     - octopress deploy --config _git_deploy.yml
@@ -45,9 +45,27 @@
 
 -
   title: Test S3
-  before: 
+  before:
     - reset
     - octopress deploy s3 --config _s3_deploy.yml
     - octopress deploy pull pull-s3 --config _s3_deploy.yml
   compare: _site pull-s3
+  after: cleanup
+
+-
+  title: Test multistage rsync
+  before:
+    - reset
+    - octopress deploy --config _rsync_deploy_multistage.yml --stage staging
+    - octopress deploy pull pull-staging-rsync --config _rsync_deploy_multistage.yml --stage staging
+  compare: _site pull-staging-rsync
+  after: cleanup
+
+-
+  title: Test multistage rsync default
+  before:
+    - reset
+    - octopress deploy --config _rsync_deploy_multistage.yml
+    - octopress deploy pull pull-production-rsync --config _rsync_deploy_multistage.yml
+  compare: _site pull-production-rsync
   after: cleanup
