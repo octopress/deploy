@@ -20,8 +20,12 @@ module Octopress
       end
 
       def push
-        puts "Syncing #{@local} files to #{@remote_path} with rsync."
-        system cmd
+        if File.exist?(@site_dir)
+          puts "Syncing #{@local} files to #{@remote_path} with rsync."
+          system cmd
+        else
+          abort "Cannot find site build at #{@local}. Be sure to build your site first."
+        end
       end
 
       def pull

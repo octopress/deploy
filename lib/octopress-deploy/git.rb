@@ -18,14 +18,18 @@ module Octopress
       # Initialize, pull, copy and deploy.
       #
       def push
-        check_branch
-        init_repo
-        puts "Syncing #{@site_dir.sub(Dir.pwd.strip+'/', '')} files to #{@repo}."
-        FileUtils.cd @deploy_dir do
-          git_pull
-          clean_deploy
-          copy_site
-          git_push
+        if File.exist?(@site_dir)
+          check_branch
+          init_repo
+          puts "Syncing #{@site_dir.sub(Dir.pwd.strip+'/', '')} files to #{@repo}."
+          FileUtils.cd @deploy_dir do
+            git_pull
+            clean_deploy
+            copy_site
+            git_push
+          end
+        else
+          abort "Cannot find site build at #{@site_dir}. Be sure to build your site first."
         end
       end
 

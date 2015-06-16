@@ -34,10 +34,14 @@ module Octopress
         if !@bucket.exists?
           abort "Bucket not found: '#{@bucket_name}'. Check your configuration or create a bucket using: `octopress deploy add-bucket`"
         else
-          puts "Syncing #{@local} files to #{@bucket_name} on S3."
-          write_files
-          delete_files if delete_files?
-          status_message
+          if File.exist?(@local)
+            puts "Syncing #{@local} files to #{@bucket_name} on S3."
+            write_files
+            delete_files if delete_files?
+            status_message
+          else
+            abort "Cannot find site build at #{@local}. Be sure to build your site first."
+          end
         end
       end
 
