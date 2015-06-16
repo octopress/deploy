@@ -1,6 +1,9 @@
 # Changelog
 
-### 1.2.5
+### 1.2.6 - 2015-05-15
+- Fix: Tell users to build their sites if the build dir doesn't exist.
+
+### 1.2.5 - 2015-05-15
 - Fix: Ensures that deployment git remote is the same as configuration before pushing.
 
 ### 1.2.4 - 2015-05-11
