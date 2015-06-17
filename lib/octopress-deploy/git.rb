@@ -9,7 +9,7 @@ module Octopress
         @remote      = @options[:remote]       || 'deploy'
         @remote_path = @options[:remote_path]  || ''
         @remote_path = @remote_path.sub(/^\//,'') #remove leading slash
-        @site_dir    = File.expand_path(@options[:site_dir]  || '_site')
+        @local       = File.expand_path(@options[:site_dir]  || '_site')
         @deploy_dir  = File.expand_path(@options[:deploy_dir] || '.deploy')
         @pull_dir    = @options[:dir]
         abort "Deploy Failed: Configure a git_url in #{@options[:config_file]} before deploying.".red if @repo.nil?
@@ -18,10 +18,10 @@ module Octopress
       # Initialize, pull, copy and deploy.
       #
       def push
-        if File.exist?(@site_dir)
+        if File.exist?(@local)
           check_branch
           init_repo
-          puts "Syncing #{@site_dir.sub(Dir.pwd.strip+'/', '')} files to #{@repo}."
+          puts "Syncing #{@local.sub(Dir.pwd.strip+'/', '')} files to #{@repo}."
           FileUtils.cd @deploy_dir do
             git_pull
             clean_deploy
@@ -29,7 +29,7 @@ module Octopress
             git_push
           end
         else
-          abort "Cannot find site build at #{@site_dir}. Be sure to build your site first."
+          abort "Cannot find site build at #{@local}. Be sure to build your site first."
         end
       end
 
@@ -47,7 +47,7 @@ module Octopress
         end
 
         if same_remote && same_branch
-          puts "Deploy to #{@branch} canceled:".red 
+          puts "Deploy to #{@branch} canceled:".red
           puts "You cannot deploy to the same branch you are working in. This will overwrite the source for your site.\n"
           puts "First, back up your site's source to a branch:"
           puts "\n  git checkout -b source".yellow
@@ -152,7 +152,7 @@ CONFIG
       #
       def copy_site
         target_dir = File.join(@deploy_dir, @remote_path).sub(/\/$/,'')
-        FileUtils.cp_r @site_dir + '/.', target_dir
+        FileUtils.cp_r @local + '/.', target_dir
         message = "Site updated at: #{Time.now.utc}"
         `git add --all .`
         `git commit -m \"#{message}\"`
