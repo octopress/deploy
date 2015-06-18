@@ -20,7 +20,7 @@ module Octopress
       end
 
       def push
-        if File.exist?(@site_dir)
+        if File.exist?(@local)
           puts "Syncing #{@local} files to #{@remote_path} with rsync."
           system cmd
         else
