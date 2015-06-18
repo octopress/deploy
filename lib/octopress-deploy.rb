@@ -145,12 +145,3 @@ FILE
 
   end
 end
-
-Octopress::Docs.add({
-  name:        "Octopress Deploy",
-  gem:         "octopress-deploy",
-  version:     Octopress::Deploy::VERSION,
-  description: "Easily deploy any static site using S3, Git or Rsync.",
-  path:        File.expand_path(File.join(File.dirname(__FILE__), "../")),
-  source_url:  "https://github.com/octopress/deploy",
-})
