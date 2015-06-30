@@ -1,5 +1,8 @@
 # Changelog
 
+### 1.2.8 - 2015-06-29
+- Fix: Using Regex quote to escape special characters in repo urls. [#61](https://github.com/octopress/deploy/pull/61)
+
 ### 1.2.7 - 2015-06-17
 - Fix: Fixed some erroneous references to site_dir configuration. [#60](https://github.com/octopress/deploy/pull/60)
 - Minor: Moved documentation to [octopress#deploy](https://github.com/octopress/octopress#deploy).
