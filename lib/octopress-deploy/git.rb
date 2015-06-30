@@ -115,7 +115,7 @@ CONFIG
       end
 
       def git_push
-        if `git remote -v` =~ /#{@remote}\s+#{@repo}.+\(push\)/
+        if `git remote -v` =~ /#{@remote}\s+#{Regexp.quote(@repo)}.+\(push\)/
           `git push #{@remote} #{@branch}`
         else
           remotes = `git remote -v`
