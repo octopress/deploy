@@ -26,12 +26,14 @@ module Octopress
       :site_dir => '_site',
     }
 
-    def self.push(options={})
+    extend self
+
+    def push(options={})
       options = merge_configs(options)
       deployer(options).push
     end
 
-    def self.pull(options={})
+    def pull(options={})
       options = merge_configs(options)
 
       if Dir.exist?(options[:dir]) &&
@@ -45,18 +47,22 @@ module Octopress
       end
     end
 
-    def self.add_bucket(options={})
+    def add_bucket(options={})
       options = merge_configs(options)
       get_deployment_method(options).new(options).add_bucket()
     end
 
-    def self.merge_configs(options={})
+    def merge_configs(options={})
       options = check_config(options)
-      config  = SafeYAML.load(ERB.new(File.read(options[:config_file])).result).to_symbol_keys
-      options = config.deep_merge(options)
+      if File.exist?(options[:config_file])
+        config  = SafeYAML.load(File.open(options[:config_file])).to_symbol_keys
+        options = config.deep_merge(options)
+      else
+        raise "File not found: #{options[:config_file]}"
+      end
     end
 
-    def self.check_config(options={})
+    def check_config(options={})
       options = options.to_symbol_keys
       options[:config_file] ||= DEFAULT_OPTIONS[:config_file]
 
@@ -67,16 +73,16 @@ module Octopress
       options
     end
 
-    def self.deployer(options)
+    def deployer(options)
       get_deployment_method(options).new(options)
     end
 
-    def self.get_deployment_method(options)
+    def get_deployment_method(options)
       METHODS[options[:method].downcase]
     end
 
 
-    def self.site_dir
+    def site_dir
       if options[:site_dir]
         options[:site_dir]
       elsif File.exist? '_config.yml'
@@ -88,7 +94,7 @@ module Octopress
 
     # Create a config file
     #
-    def self.init_config(options={})
+    def init_config(options={})
       options = options.to_symbol_keys
 
       if !options[:method]
@@ -100,7 +106,7 @@ module Octopress
       check_gitignore
     end
 
-    def self.write_config
+    def write_config
       if File.exist?(@options[:config_file]) && !@options[:force]
         abort "A config file already exists at #{@options[:config_file]}. Use --force to overwrite."
       end
@@ -114,7 +120,7 @@ module Octopress
       puts "Modify these configurations as necessary."
     end
 
-    def self.get_config
+    def get_config
       <<-FILE
 #{"method: #{@options[:method]}".ljust(40)}  # How do you want to deploy? git, rsync or s3.
 #{"site_dir: #{@options[:site_dir]}".ljust(40)}  # Location of your static site files.
@@ -127,7 +133,7 @@ FILE
     #
     # returns: Boolean - whether it is present or not.
     #
-    def self.check_gitignore
+    def check_gitignore
       gitignore = File.join(`git rev-parse --show-toplevel`.strip, ".gitignore")
 
       if !File.exist?(gitignore) ||
@@ -139,7 +145,7 @@ FILE
       end
     end
 
-    def self.gem_dir(*subdirs)
+    def gem_dir(*subdirs)
       File.expand_path(File.join(File.dirname(__FILE__), '../', *subdirs))
     end
 
