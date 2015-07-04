@@ -53,25 +53,20 @@ module Octopress
     end
 
     def merge_configs(options={})
-      options = check_config(options)
-      if File.exist?(options[:config_file])
-        config  = SafeYAML.load(File.open(options[:config_file])).to_symbol_keys
-        options = config.deep_merge(options)
-      else
-        raise "File not found: #{options[:config_file]}"
-      end
-    end
-
-    def check_config(options={})
       options = options.to_symbol_keys
       options[:config_file] ||= DEFAULT_OPTIONS[:config_file]
 
-      if !File.exists? options[:config_file]
+      load_config(options[:config_file]).deep_merge(options)
+    end
+
+    def load_config(path)
+      if File.exist?(path)
+        YAML.load(ERB.new(File.read(path)).result || {}).to_symbol_keys
+      else
         abort "File not found: #{options[:config_file]}. Create a deployment config file with `octopress deploy init <METHOD>`."
       end
-
-      options
     end
+
 
     def deployer(options)
       get_deployment_method(options).new(options)
