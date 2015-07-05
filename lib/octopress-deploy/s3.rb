@@ -279,10 +279,12 @@ CONFIG
     protected
 
       def write_file? file
+        return true unless @incremental
+
         file_digest = Digest::MD5.file(file).hexdigest
         o = s3_object file
         s3sum = o.etag.tr('"','') if o.exists?
-        @incremental == false || s3sum.to_s != file_digest
+        s3sum.to_s != file_digest
       end
 
       def s3_object file
