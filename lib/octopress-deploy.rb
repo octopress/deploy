@@ -52,7 +52,7 @@ module Octopress
 
     def self.merge_configs(options={})
       options = check_config(options)
-      config  = SafeYAML.load(File.open(options[:config_file])).to_symbol_keys
+      config  = SafeYAML.load(ERB.new(File.read(options[:config_file])).result).to_symbol_keys
       options = config.deep_merge(options)
     end
 
