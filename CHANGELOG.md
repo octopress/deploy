@@ -1,5 +1,8 @@
 # Changelog
 
+### 1.3.0 - 2015-07-05
+- New: Now `_deploy.yml` is processed through ERB, this means you can load configurations for ENV vars pretty easily. [#62](https://github.com/octopress/deploy/pull/62)
+
 ### 1.2.8 - 2015-06-29
 - Fix: Using Regex quote to escape special characters in repo urls. [#61](https://github.com/octopress/deploy/pull/61)
 
