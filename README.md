@@ -15,7 +15,7 @@ $ gem install octopress
 
 ## Usage
 
-For usage instructions, please refer to [octopress](https://github.com/octopress/octopress#deploy).
+For usage instructions, please refer to the [Octopress CLI documentation](https://github.com/octopress/octopress#deploy).
 
 ## Contributing
 
