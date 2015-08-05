@@ -2,7 +2,7 @@
 
 Easily deploy any static site using S3, Git or Rsync. Pull request to support other deployment methods are welcome.
 
-[![Gem Version](http://img.shields.io/gem/v/octopress-deploy.svg)](https://rubygems.org/gems/octopress-deploy)
+[![Gem Version](https://badge.fury.io/rb/octopress-deploy.svg)](http://badge.fury.io/rb/octopress-deploy)
 [![License](http://img.shields.io/:license-mit-blue.svg)](http://octopress.mit-license.org)
 
 ## Installation
