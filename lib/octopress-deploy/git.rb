@@ -57,15 +57,6 @@ module Octopress
         end
       end
 
-      # Check to see if local deployment dir is configured to deploy.
-      #
-      def check_deploy_dir
-        if Dir.exist? @deploy_dir
-          FileUtils.cd @deploy_dir do
-            return `git remote -v`.include? @repo
-          end
-        end
-      end
 
       def self.default_config(options={})
         config = <<-CONFIG
@@ -85,7 +76,9 @@ CONFIG
       # If necessary create deploy directory and initialize it with deployment remote.
       #
       def init_repo
-        return if check_deploy_dir
+
+        need_initial_commits=false
+
         FileUtils.mkdir_p @deploy_dir
         FileUtils.cd @deploy_dir do
           if Dir[@deploy_dir+'/*'].empty?
@@ -100,17 +93,38 @@ CONFIG
             if git_pull
               `git branch -m #{@branch}`
 
-            # If no branch exists on remote, create one locally.
+            # If no branch exists on remote, we need to create one locally.
             else
-              `echo "initialize deploy repo" > _`
-              `git add .`
-              `git commit -m \"initial commit\"`
-              `git branch -m #{@branch}`
-              `git rm _`
-              `git add -u`
-              `git commit -m 'cleanup'`
+              need_initial_commits=true
             end
           end
+        end
+
+        copy_user_config
+
+        make_initial_commits if need_initial_commits
+      end
+
+      def make_initial_commits
+        FileUtils.cd @deploy_dir do
+          `echo "initialize deploy repo" > _`
+          `git add .`
+          `git commit -m \"initial commit\"`
+          `git branch -m #{@branch}`
+          `git rm _`
+          `git add -u`
+          `git commit -m 'cleanup'`
+        end
+      end
+
+      # Set user config to be used for commit.
+      #
+      def copy_user_config
+        user_name=`git config user.name`.chomp
+        user_email=`git config user.email`.chomp
+        FileUtils.cd @deploy_dir do
+          `git config user.name "#{user_name}"`
+          `git config user.email "#{user_email}"`
         end
       end
 
