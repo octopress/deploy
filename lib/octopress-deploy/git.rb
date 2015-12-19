@@ -21,7 +21,6 @@ module Octopress
         if File.exist?(@local)
           check_branch
           init_repo
-          copy_user_config
           puts "Syncing #{@local.sub(Dir.pwd.strip+'/', '')} files to #{@repo}."
           FileUtils.cd @deploy_dir do
             git_pull
@@ -58,15 +57,6 @@ module Octopress
         end
       end
 
-      # Check to see if local deployment dir is configured to deploy.
-      #
-      def check_deploy_dir
-        if Dir.exist? @deploy_dir
-          FileUtils.cd @deploy_dir do
-            return `git remote -v`.include? @repo
-          end
-        end
-      end
 
       def self.default_config(options={})
         config = <<-CONFIG
@@ -86,7 +76,6 @@ CONFIG
       # If necessary create deploy directory and initialize it with deployment remote.
       #
       def init_repo
-        return if check_deploy_dir
 
         need_initial_commits=false
 
@@ -111,11 +100,12 @@ CONFIG
           end
         end
 
+        copy_user_config
+
         make_initial_commits if need_initial_commits
       end
 
       def make_initial_commits
-        copy_user_config
         FileUtils.cd @deploy_dir do
           `echo "initialize deploy repo" > _`
           `git add .`
