@@ -20,7 +20,7 @@ module Octopress
         @distro_id   = options[:distribution_id]   || ENV['AWS_DISTRIBUTION_ID']
         @remote_path = (options[:remote_path]      || '/').sub(/^\//,'')
         @verbose     = options[:verbose]
-        @incremental = options[:incremental]
+        @incremental = options[:incremental]       || true
         @delete      = options[:delete]
         @headers     = options[:headers]           || []
         @remote_path = @remote_path.sub(/^\//,'')  # remove leading slash
@@ -270,7 +270,7 @@ module Octopress
 #{"remote_path: #{options[:remote_path] || '/'}".ljust(40)}  # relative path on bucket where files should be copied.
 #{"region: #{options[:remote_path] || 'us-east-1'}".ljust(40)}  # Region where your bucket is located.
 #{"verbose: #{options[:verbose] || 'false'}".ljust(40)}  # Print out all file operations.
-#{"incremental: #{options[:incremental] || 'false'}".ljust(40)}  # Only upload new/changed files
+#{"incremental: #{options[:incremental] || 'true'}".ljust(40)}  # Only upload new/changed files
 #{"delete: #{options[:delete] || 'false'}".ljust(40)}  # Remove files from destination which do not match source files.
 #{"parallel: #{options[:parallel] || 'true'}".ljust(40)}  # Speed up deployment by uploading files in parallel.
 CONFIG
