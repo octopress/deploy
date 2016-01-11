@@ -1,5 +1,8 @@
 # Changelog
 
+### unreleased
+- New: Files are now uploaded to S3 in parallel. This can be disabled by setting `parallel: false` in `_deploy.yml`. [#63](https://github.com/octopress/deploy/pull/63)
+
 ### 1.3.0 - 2015-07-05
 - New: Now `_deploy.yml` is processed through ERB, this means you can load configurations for ENV vars pretty easily. [#62](https://github.com/octopress/deploy/pull/62)
 
