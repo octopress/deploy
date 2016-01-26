@@ -18,6 +18,7 @@ module Octopress
         @secret_key  = options[:secret_access_key] || ENV['AWS_SECRET_ACCESS_KEY']
         @region      = options[:region]            || ENV['AWS_DEFAULT_REGION'] || 'us-east-1'
         @distro_id   = options[:distribution_id]   || ENV['AWS_DISTRIBUTION_ID']
+        @invalidation_override = options[:invalidation_url]
         @remote_path = (options[:remote_path]      || '/').sub(/^\//,'')
         @verbose     = options[:verbose]
         @incremental = options[:incremental]
@@ -97,7 +98,7 @@ module Octopress
             else
               progress('=')
             end
-          else 
+          else
             o.write(file_with_options)
             files_to_invalidate.push(file)
             if @verbose
@@ -108,18 +109,23 @@ module Octopress
           end
         end
 
+        unless @invalidation_override.nil?
+          puts "Using invalidation url #{@invalidation_override}" if @verbose
+          files_to_invalidate = [@invalidation_override]
+        end
+
         invalidate_cache(files_to_invalidate) unless @distro_id.nil?
       end
 
       def invalidate_cache(files)
         puts "Invalidating cache for #{pluralize('file', site_files.size)}" if @verbose
         @cloudfront.create_invalidation(
-          distribution_id: @distro_id, 
+          distribution_id: @distro_id,
           invalidation_batch:{
             paths:{
               quantity: files.size,
               items: files.map{|file| "/" + remote_path(file)}
-            }, 
+            },
             # String of 8 random chars to uniquely id this invalidation
             caller_reference: (0...8).map { ('a'..'z').to_a[rand(26)] }.join
           }
@@ -268,6 +274,7 @@ module Octopress
 #{"access_key_id: #{options[:access_key_id]}".ljust(40)}  # Get this from your AWS console at aws.amazon.com.
 #{"secret_access_key: #{options[:secret_access_key]}".ljust(40)}  # Keep it safe; keep it secret. Keep this file in your .gitignore.
 #{"distribution_id: #{options[:distribution_id]}".ljust(40)}  # Get this from your CloudFront page at https://console.aws.amazon.com/cloudfront/
+#{"invalidation_url: #{options[:invalidation_url]}".ljust(40)}  # Use only this URL for CloudFront Invalidation.
 #{"remote_path: #{options[:remote_path] || '/'}".ljust(40)}  # relative path on bucket where files should be copied.
 #{"region: #{options[:remote_path] || 'us-east-1'}".ljust(40)}  # Region where your bucket is located.
 #{"verbose: #{options[:verbose] || 'false'}".ljust(40)}  # Print out all file operations.
