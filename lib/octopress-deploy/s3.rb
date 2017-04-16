@@ -132,6 +132,8 @@ module Octopress
           :acl => :public_read
         }
 
+        file_with_options[:acl] = :public_read
+
         @headers.each do |conf|
           if conf.has_key? 'filename' and s3_filename.match(conf['filename'])
             if @verbose
